@@ -70,7 +70,7 @@ body{
   background:rgba(6,9,14,.96);
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:10px;padding:0 18px;
-  flex-wrap:nowrap;overflow:hidden;
+  flex-wrap:nowrap;
   backdrop-filter:blur(10px);
 }
 .t-elden #topbar{background:rgba(6,10,6,.97);}
@@ -378,57 +378,63 @@ body{
 .search-bar:focus{border-color:var(--acc);}
 .search-bar::placeholder{color:var(--text3);}
 
-/* ── COMPRESS: 600–900px — stay single line, shrink elements ── */
+/* ── 600–900px: compress onto one line ── */
 @media(max-width:900px){
   #topbar{padding:0 12px;gap:7px;}
   .logo{font-size:11px;letter-spacing:.1em;}
   .logo em{display:none;}
   .t-btn{padding:3px 7px;font-size:10px;}
   .sel{font-size:11px;padding:3px 6px;max-width:108px;}
-  .icon-btn{padding:4px 7px;font-size:7.5px;letter-spacing:.08em;}
-  .csv-btn{padding:4px 8px;font-size:7.5px;letter-spacing:.08em;}
+  .icon-btn{padding:4px 7px;font-size:7.5px;}
+  .csv-btn{padding:4px 8px;font-size:7.5px;}
   #shell{padding-left:12px;padding-right:12px;}
   #subnav{margin:0 -12px;padding:0 12px;}
   .snav{padding:9px 10px;font-size:8.5px;letter-spacing:.08em;}
 }
 
-/* ── COMPRESS MORE: 480–600px — tighter still, single line ── */
+/* ── 480–600px: compress further, still one line ── */
 @media(max-width:600px){
-  #topbar{padding:0 8px;gap:5px;}
-  .logo{font-size:10px;letter-spacing:.08em;}
+  #topbar{padding:0 8px;gap:4px;}
+  .logo{font-size:10px;letter-spacing:.06em;}
   .theme-tog{padding:2px;gap:1px;}
-  .t-btn{padding:2px 5px;font-size:9px;letter-spacing:.02em;}
-  .pt-wrap{gap:4px;}
-  .sel{font-size:10px;padding:2px 5px;max-width:88px;}
-  .icon-btn{padding:3px 6px;font-size:7px;}
+  .t-btn{padding:2px 5px;font-size:9px;letter-spacing:.01em;}
+  .pt-wrap{gap:3px;}
+  .sel{font-size:10px;padding:2px 4px;max-width:82px;}
+  .icon-btn{padding:3px 5px;font-size:7px;}
   .csv-btn{padding:3px 6px;font-size:7px;}
   #shell{padding-left:8px;padding-right:8px;}
   #subnav{margin:0 -8px;padding:0 8px;}
-  .snav{padding:8px 8px;font-size:8px;letter-spacing:.06em;}
+  .snav{padding:8px 7px;font-size:8px;letter-spacing:.05em;}
 }
 
-/* ── WRAP: under 480px — topbar wraps to two rows, subnav pills ── */
+/* ── under 480px: wrap topbar to two rows, pill subnav ── */
 @media(max-width:480px){
   #topbar{
-    height:auto;flex-wrap:wrap;
-    padding:6px 10px;gap:5px;align-items:center;
+    height:auto;
+    flex-wrap:wrap;
+    padding:6px 10px;
+    gap:5px;
+    align-items:center;
   }
   .logo{order:1;font-size:11px;letter-spacing:.1em;flex-shrink:0;}
   .logo em{display:none;}
-  .tb-gap{order:2;flex:1;}
+  .tb-gap{order:2;flex:1;min-width:0;}
   .csv-btn{order:3;flex-shrink:0;padding:4px 8px;font-size:7.5px;}
-  /* row 2: theme + selectors fill full width */
-  .theme-tog{order:4;flex:1;justify-content:flex-start;border-radius:14px;}
-  .t-btn{padding:3px 7px;font-size:9.5px;}
+  .theme-tog{order:4;flex:1;min-width:0;border-radius:14px;padding:2px;gap:1px;}
+  .t-btn{flex:1;text-align:center;padding:4px 3px;font-size:9px;letter-spacing:.01em;}
   .pt-wrap{order:5;flex-shrink:0;gap:4px;}
-  .sel{font-size:11px;padding:3px 6px;max-width:96px;}
-  .icon-btn{padding:3px 6px;font-size:7px;}
-  #shell{padding-top:84px;padding-left:10px;padding-right:10px;}
+  .sel{font-size:11px;padding:3px 5px;max-width:90px;}
+  .icon-btn{padding:3px 5px;font-size:7px;}
+  #shell{padding-top:90px;padding-left:10px;padding-right:10px;}
   #subnav{
-    top:84px;
-    margin:0 -10px;padding:7px 10px;
-    flex-wrap:wrap;overflow-x:visible;overflow-y:visible;
-    height:auto;gap:5px;
+    top:90px;
+    margin:0 -10px;
+    padding:7px 10px;
+    flex-wrap:wrap;
+    overflow-x:visible;
+    overflow-y:visible;
+    height:auto;
+    gap:5px;
   }
   .snav{display:none;}
   .snav-pill{
