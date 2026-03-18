@@ -138,24 +138,28 @@ body{
 #subnav{
   position:fixed;top:52px;left:0;right:0;z-index:100;
   background:var(--bg0);border-bottom:1px solid var(--border);
-  display:flex;gap:0;overflow-x:auto;overflow-y:hidden;
+  display:flex;flex-wrap:wrap;gap:6px;
+  padding:8px 18px;
   scrollbar-width:none;
-  padding:0 18px;
 }
 #subnav::-webkit-scrollbar{display:none;}
 .t-elden #subnav{background:var(--bg0);}
 .t-sote #subnav{background:var(--bg0);}
-.snav{
-  font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;
-  padding:10px 14px;border:none;background:transparent;
-  color:var(--text2);cursor:pointer;
-  border-bottom:2px solid transparent;margin-bottom:-1px;
-  white-space:nowrap;transition:all .18s;
+
+/* all nav items are pills now */
+.snav{display:none;}
+.snav-pill{
+  display:inline-flex;align-items:center;
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;
+  padding:5px 13px;
+  border:0.5px solid var(--border);border-radius:14px;
+  background:transparent;color:var(--text2);
+  cursor:pointer;transition:all .15s;white-space:nowrap;
 }
-.snav:hover{color:var(--text);}
-.snav.on{color:var(--acc);border-bottom-color:var(--acc);}
-.snav.sote-tab.on{color:var(--sote-acc);border-bottom-color:var(--sote-acc);}
-.snav-pill{display:none;}
+.snav-pill:hover{color:var(--text);border-color:var(--acc);}
+.snav-pill.on{background:var(--acc);color:var(--bg0);border-color:var(--acc);}
+.snav-pill.sote-pill{color:var(--sote-text2);border-color:var(--sote-border);}
+.snav-pill.sote-pill.on{background:var(--sote-acc);color:#fff0ee;border-color:var(--sote-acc);}
 .tab-pane{display:none;padding-top:18px;padding-bottom:60px;}
 .tab-pane.on{display:block;}
 
@@ -389,8 +393,7 @@ body{
   .icon-btn{padding:4px 7px;font-size:7.5px;}
   .csv-btn{padding:4px 8px;font-size:7.5px;}
   #shell{padding-left:12px;padding-right:12px;}
-  #subnav{padding:0 12px;}
-  .snav{padding:9px 10px;font-size:8.5px;letter-spacing:.08em;}
+  #subnav{padding:8px 12px;}
 }
 @media(max-width:600px){
   #topbar{padding:0 8px;gap:4px;}
@@ -402,8 +405,7 @@ body{
   .icon-btn{padding:3px 5px;font-size:7px;}
   .csv-btn{padding:3px 6px;font-size:7px;}
   #shell{padding-left:8px;padding-right:8px;}
-  #subnav{padding:0 8px;}
-  .snav{padding:8px 7px;font-size:8px;letter-spacing:.05em;}
+  #subnav{padding:7px 8px;}
 }
 @media(max-width:480px){
   #topbar{padding:6px 10px;gap:5px;align-items:center;}
@@ -417,24 +419,7 @@ body{
   .sel{font-size:11px;padding:3px 5px;max-width:90px;}
   .icon-btn{padding:3px 5px;font-size:7px;}
   #shell{padding-left:10px;padding-right:10px;}
-  #subnav{
-    padding:7px 10px;
-    flex-wrap:wrap;overflow-x:visible;overflow-y:visible;
-    height:auto;gap:5px;
-  }
-  .snav{display:none;}
-  .snav-pill{
-    display:inline-flex;align-items:center;
-    font-family:'Cinzel',serif;font-size:9px;letter-spacing:.06em;
-    padding:5px 10px;
-    border:0.5px solid var(--border);border-radius:14px;
-    background:transparent;color:var(--text2);
-    cursor:pointer;transition:all .15s;white-space:nowrap;
-  }
-  .snav-pill:hover{color:var(--text);border-color:var(--acc);}
-  .snav-pill.on{background:var(--acc);color:var(--bg0);border-color:var(--acc);}
-  .snav-pill.sote-pill{color:var(--sote-text2);border-color:var(--sote-border);}
-  .snav-pill.sote-pill.on{background:var(--sote-acc);color:#fff0ee;border-color:var(--sote-acc);}
+  #subnav{padding:6px 10px;}
 }
 </style>
 </head>
@@ -479,22 +464,13 @@ body{
 
 <div id="shell">
   <div id="subnav">
-    <!-- Desktop/tablet: underline tabs -->
-    <button class="snav on"       onclick="showTab('dashboard',this)">Dashboard</button>
-    <button class="snav"          onclick="showTab('bosses',this)">Bosses</button>
-    <button class="snav sote-tab" onclick="showTab('sote',this)">Shadow of the Erdtree</button>
-    <button class="snav"          onclick="showTab('weapons',this)">Weapons</button>
-    <button class="snav"          onclick="showTab('spells',this)">Sorceries &amp; Incantations</button>
-    <button class="snav"          onclick="showTab('spirits',this)">Spirit Ashes</button>
-    <button class="snav"          onclick="showTab('talismans',this)">Talismans</button>
-    <!-- Mobile: pill buttons with short labels -->
-    <button class="snav-pill on"       onclick="showTab('dashboard',this)">Dashboard</button>
-    <button class="snav-pill"          onclick="showTab('bosses',this)">Bosses</button>
-    <button class="snav-pill sote-pill" onclick="showTab('sote',this)">Shadow</button>
-    <button class="snav-pill"          onclick="showTab('weapons',this)">Weapons</button>
-    <button class="snav-pill"          onclick="showTab('spells',this)">Spells</button>
-    <button class="snav-pill"          onclick="showTab('spirits',this)">Spirit Ashes</button>
-    <button class="snav-pill"          onclick="showTab('talismans',this)">Talismans</button>
+    <button class="snav-pill on"        onclick="showTab('dashboard',this)">Dashboard</button>
+    <button class="snav-pill"           onclick="showTab('bosses',this)">Bosses</button>
+    <button class="snav-pill sote-pill" onclick="showTab('sote',this)">Shadow of the Erdtree</button>
+    <button class="snav-pill"           onclick="showTab('weapons',this)">Weapons</button>
+    <button class="snav-pill"           onclick="showTab('spells',this)">Sorceries &amp; Incantations</button>
+    <button class="snav-pill"           onclick="showTab('spirits',this)">Spirit Ashes</button>
+    <button class="snav-pill"           onclick="showTab('talismans',this)">Talismans</button>
   </div>
 
   <div id="tab-dashboard" class="tab-pane on"><div id="dash-body"></div></div>
@@ -714,13 +690,9 @@ function setTheme(t, btn) {
 /* ── TABS ── */
 function showTab(id, btn) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.snav, .snav-pill').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.snav-pill').forEach(b => b.classList.remove('on'));
   document.getElementById('tab-' + id).classList.add('on');
   btn.classList.add('on');
-  // sync the paired button (snav ↔ snav-pill) by matching onclick tab id
-  const paired = Array.from(document.querySelectorAll('.snav, .snav-pill'))
-    .filter(b => b !== btn && b.getAttribute('onclick') === btn.getAttribute('onclick'));
-  paired.forEach(b => b.classList.add('on'));
 }
 
 /* ── HELPERS ── */
