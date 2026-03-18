@@ -135,8 +135,11 @@ body{
 #subnav{
   position:sticky;top:var(--top-h);z-index:100;
   background:var(--bg0);border-bottom:1px solid var(--border);
-  display:flex;gap:0;overflow-x:auto;margin:0 -18px;padding:0 18px;
+  display:flex;gap:0;overflow-x:auto;overflow-y:hidden;
+  margin:0 -18px;padding:0 18px;
+  scrollbar-width:none;
 }
+#subnav::-webkit-scrollbar{display:none;}
 .t-elden #subnav{background:var(--bg0);}
 .t-sote #subnav{background:var(--bg0);}
 .snav{
@@ -373,10 +376,28 @@ body{
 .search-bar::placeholder{color:var(--text3);}
 
 @media(max-width:680px){
-  #topbar{padding:0 10px;gap:6px;}
-  .logo em{display:none;}
-  #shell{padding-left:12px;padding-right:12px;}
-  #subnav{margin:0 -12px;padding:0 12px;}
+  #topbar{
+    height:auto;min-height:var(--top-h);
+    flex-wrap:wrap;padding:6px 10px;gap:5px;
+  }
+  .logo{order:1;font-size:11px;}
+  .logo em{font-size:7px;}
+  .tb-gap{display:none;}
+  .theme-tog{order:2;}
+  .t-btn{padding:2px 8px;font-size:10px;}
+  .pt-wrap{order:3;gap:4px;}
+  .sel{font-size:11px;padding:3px 6px;max-width:105px;}
+  .icon-btn{padding:4px 7px;font-size:7px;}
+  .csv-btn{order:4;padding:4px 8px;font-size:7px;}
+  #shell{padding-left:10px;padding-right:10px;padding-top:96px;}
+  #subnav{margin:0 -10px;padding:0 10px;scrollbar-width:none;top:96px;}
+  #subnav::-webkit-scrollbar{display:none;}
+}
+@media(max-width:420px){
+  .theme-tog{width:100%;order:3;justify-content:center;}
+  .pt-wrap{order:2;}
+  #shell{padding-top:112px;}
+  #subnav{top:112px;}
 }
 </style>
 </head>
@@ -545,13 +566,13 @@ function saveState() {
 
 function freshState() {
   return {
-    bosses: Object.fromEntries(Object.entries(RAW.bosses).map(([r,bs]) => [r, bs.map(b => ({...b}))])),
-    sote_bosses: Object.fromEntries(Object.entries(RAW.sote_bosses).map(([r,bs]) => [r, bs.map(b => ({...b}))])),
-    weapons: Object.fromEntries(Object.entries(RAW.weapons).map(([c,ws]) => [c, ws.map(w => ({...w}))])),
-    sorceries: RAW.sorceries.map(s => ({...s})),
-    incantations: RAW.incantations.map(s => ({...s})),
-    spirit_ashes: RAW.spirit_ashes.map(s => ({...s})),
-    talismans: RAW.talismans.map(t => ({...t})),
+    bosses: Object.fromEntries(Object.entries(RAW.bosses).map(([r,bs]) => [r, bs.map(b => ({name:b.name, killed:false, attempts:0}))])),
+    sote_bosses: Object.fromEntries(Object.entries(RAW.sote_bosses).map(([r,bs]) => [r, bs.map(b => ({name:b.name, killed:false, attempts:0}))])),
+    weapons: Object.fromEntries(Object.entries(RAW.weapons).map(([c,ws]) => [c, ws.map(w => ({name:w.name, location:w.location, collected:false}))])),
+    sorceries: RAW.sorceries.map(s => ({name:s.name, location:s.location, collected:false})),
+    incantations: RAW.incantations.map(s => ({name:s.name, location:s.location, collected:false})),
+    spirit_ashes: RAW.spirit_ashes.map(s => ({name:s.name, location:s.location, collected:false})),
+    talismans: RAW.talismans.map(t => ({name:t.name, effect:t.effect, location:t.location, collected:false})),
   };
 }
 
@@ -560,13 +581,35 @@ function switchTo(char, journey) {
   currentChar = char;
   currentJourney = journey;
   saveMeta();
-  state = loadState() || freshState();
+  // Always start fresh if no saved data exists for this exact char+journey combo
+  const saved = loadState();
+  state = saved ? saved : freshState();
   buildSelectors();
   renderAll();
 }
 
-function onCharChange(c) { switchTo(c, currentJourney); }
-function onJourneyChange(j) { switchTo(currentChar, j); }
+function onCharChange(c) {
+  // Switching character resets journey to NG and always loads that char's NG state (fresh if none)
+  saveState();
+  currentChar = c;
+  currentJourney = 'NG';
+  saveMeta();
+  const saved = loadState();
+  state = saved ? saved : freshState();
+  buildSelectors();
+  renderAll();
+}
+
+function onJourneyChange(j) {
+  saveState();
+  currentJourney = j;
+  saveMeta();
+  // Each journey for this character is independent — fresh if never played
+  const saved = loadState();
+  state = saved ? saved : freshState();
+  buildSelectors();
+  renderAll();
+}
 
 function buildSelectors() {
   const cs = document.getElementById('char-sel');
@@ -591,15 +634,15 @@ function confirmModal() {
   const name = document.getElementById('modal-inp').value.trim();
   if (!name) return;
   if (chars.includes(name)) { alert('A character with that name already exists.'); return; }
+  // Wipe any stale keys that might exist for this name
+  JOURNEYS.forEach(j => localStorage.removeItem(stateKey(name, j)));
   chars.push(name);
-  saveMeta();
-  // Always fresh — never inherit existing state
-  saveState();
+  saveState(); // save current char's state first
   currentChar = name;
   currentJourney = 'NG';
   state = freshState();
   saveMeta();
-  saveState();
+  saveState(); // persist blank state for new char NG
   buildSelectors();
   renderAll();
   closeModal();
