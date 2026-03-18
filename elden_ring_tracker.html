@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elden Ring Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── THEMES ── */
+:root {
+  --bg0:#06090e;--bg1:#080d16;--bg2:#0b1220;--bg3:#0f172c;--bg4:#141e36;
+  --acc:#9ab0e0;--acc2:#c4a8f8;--acc3:#4a6aaa;
+  --text:#ccdaf5;--text2:#8898c8;--text3:#6070a8;
+  --border:rgba(154,176,224,0.12);--border2:rgba(154,176,224,0.07);
+  --felled:#1e4a2e;--felled-text:#5ab870;--felled-border:rgba(90,184,112,0.25);
+  --sote-acc:#b82818;--sote-acc2:#c86820;--sote-border:rgba(184,40,24,0.2);
+  --sote-bg:#110808;--sote-text:#d8b0a0;--sote-text2:#7a4030;
+  --top-h:52px;
+}
+.t-elden {
+  --bg0:#060a06;--bg1:#09110a;--bg2:#0c180e;--bg3:#101e12;--bg4:#152616;
+  --acc:#c0981e;--acc2:#78b838;--acc3:#7a6010;
+  --text:#e0cc88;--text2:#90a860;--text3:#607848;
+  --border:rgba(192,152,30,0.12);--border2:rgba(192,152,30,0.07);
+  --felled:#1a4818;--felled-text:#70b850;
+}
+.t-sote {
+  --bg0:#0e0606;--bg1:#140909;--bg2:#1a0e0e;--bg3:#201212;--bg4:#281818;
+  --acc:#b82818;--acc2:#c86820;--acc3:#7a1a10;
+  --text:#d8b0a0;--text2:#a06848;--text3:#784030;
+  --border:rgba(184,40,24,0.15);--border2:rgba(184,40,24,0.08);
+  --felled:#1e4a2e;--felled-text:#5ab870;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  font-family:'Crimson Pro',Georgia,serif;
+  background:var(--bg0);color:var(--text);
+  min-height:100vh;
+}
+
+/* ── STAR BG ── */
+#stars{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(1px 1px at 7% 11%,rgba(154,176,224,.55) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 19% 5%,rgba(196,168,248,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 34% 16%,rgba(154,176,224,.45) 0%,transparent 100%),
+    radial-gradient(1px 1px at 53% 3%,rgba(154,176,224,.3) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 68% 13%,rgba(196,168,248,.38) 0%,transparent 100%),
+    radial-gradient(1px 1px at 82% 8%,rgba(154,176,224,.45) 0%,transparent 100%),
+    radial-gradient(1px 1px at 93% 20%,rgba(154,176,224,.3) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 44% 26%,rgba(196,168,248,.28) 0%,transparent 100%),
+    radial-gradient(1px 1px at 76% 31%,rgba(154,176,224,.22) 0%,transparent 100%),
+    radial-gradient(1px 1px at 14% 48%,rgba(196,168,248,.2) 0%,transparent 100%),
+    radial-gradient(1px 1px at 59% 55%,rgba(154,176,224,.15) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 30% 62%,rgba(154,176,224,.18) 0%,transparent 100%),
+    radial-gradient(1px 1px at 86% 67%,rgba(196,168,248,.18) 0%,transparent 100%),
+    radial-gradient(1px 1px at 48% 78%,rgba(154,176,224,.15) 0%,transparent 100%),
+    radial-gradient(1px 1px at 72% 85%,rgba(196,168,248,.14) 0%,transparent 100%),
+    radial-gradient(1px 1px at 22% 91%,rgba(154,176,224,.16) 0%,transparent 100%);
+}
+.t-elden #stars,.t-sote #stars{display:none;}
+
+/* ── TOPBAR (sticky) ── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:var(--top-h);
+  background:rgba(6,9,14,.96);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;padding:0 18px;
+  backdrop-filter:blur(10px);
+}
+.t-elden #topbar{background:rgba(6,10,6,.97);}
+.t-sote #topbar{background:rgba(14,6,6,.97);}
+
+.logo{
+  font-family:'Cinzel',serif;font-size:13px;font-weight:700;
+  letter-spacing:.14em;color:var(--acc);white-space:nowrap;flex-shrink:0;
+}
+.logo em{
+  font-style:normal;font-size:8px;font-weight:400;
+  color:var(--acc2);margin-left:5px;letter-spacing:.06em;opacity:.75;vertical-align:middle;
+}
+.tb-gap{flex:1;}
+
+/* Theme toggle */
+.theme-tog{
+  display:flex;background:var(--bg3);
+  border:1px solid var(--border);border-radius:18px;padding:3px;gap:2px;flex-shrink:0;
+}
+.t-btn{
+  padding:3px 10px;border-radius:14px;border:none;
+  background:transparent;color:var(--text2);
+  font-family:'Crimson Pro',serif;font-size:11px;cursor:pointer;
+  letter-spacing:.04em;transition:all .18s;white-space:nowrap;
+}
+.t-btn.on{background:var(--acc);color:var(--bg0);font-weight:600;}
+
+/* Character + Journey selectors */
+.pt-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.pt-sep{color:var(--text3);font-size:11px;opacity:.6;}
+.sel{
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);font-family:'Crimson Pro',serif;font-size:12px;
+  padding:4px 8px;border-radius:6px;cursor:pointer;outline:none;
+  max-width:130px;
+}
+.sel option{background:#0b1220;}
+.icon-btn{
+  background:transparent;border:1px solid var(--border);
+  color:var(--acc);font-family:'Cinzel',serif;font-size:8px;
+  letter-spacing:.1em;padding:5px 9px;border-radius:6px;cursor:pointer;
+  transition:all .18s;white-space:nowrap;flex-shrink:0;
+}
+.icon-btn:hover{background:var(--acc);color:var(--bg0);}
+.icon-btn.dim{color:var(--text2);border-color:var(--border2);}
+.csv-btn{
+  background:transparent;border:1px solid var(--border);
+  color:var(--acc);font-family:'Cinzel',serif;font-size:8px;
+  letter-spacing:.1em;padding:5px 9px;border-radius:6px;cursor:pointer;
+  transition:all .18s;flex-shrink:0;
+}
+.csv-btn:hover{background:var(--acc);color:var(--bg0);}
+
+/* ── CONTENT SHELL ── */
+#shell{
+  position:relative;z-index:1;
+  padding-top:var(--top-h);
+  max-width:1360px;margin:0 auto;padding-left:18px;padding-right:18px;
+}
+
+/* ── SUB NAV TABS ── */
+#subnav{
+  position:sticky;top:var(--top-h);z-index:100;
+  background:var(--bg0);border-bottom:1px solid var(--border);
+  display:flex;gap:0;overflow-x:auto;margin:0 -18px;padding:0 18px;
+}
+.t-elden #subnav{background:var(--bg0);}
+.t-sote #subnav{background:var(--bg0);}
+.snav{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;
+  padding:10px 14px;border:none;background:transparent;
+  color:var(--text2);cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  white-space:nowrap;transition:all .18s;
+}
+.snav:hover{color:var(--text);}
+.snav.on{color:var(--acc);border-bottom-color:var(--acc);}
+.snav.sote-tab.on{color:var(--sote-acc);border-bottom-color:var(--sote-acc);}
+.tab-pane{display:none;padding-top:18px;padding-bottom:60px;}
+.tab-pane.on{display:block;}
+
+/* ── MODAL ── */
+#modal-wrap{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:500;display:none;align-items:center;justify-content:center;
+}
+#modal-wrap.open{display:flex;}
+.modal{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:12px;padding:22px 24px;width:360px;max-width:92vw;
+}
+.modal h3{
+  font-family:'Cinzel',serif;font-size:12px;letter-spacing:.12em;
+  color:var(--acc);margin-bottom:6px;
+}
+.modal p{font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.55;font-style:italic;}
+.modal input{
+  width:100%;background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);font-family:'Crimson Pro',serif;font-size:14px;
+  padding:8px 11px;border-radius:6px;outline:none;margin-bottom:14px;
+}
+.modal input:focus{border-color:var(--acc);}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;}
+.mbtn{
+  padding:7px 16px;border-radius:6px;font-family:'Cinzel',serif;
+  font-size:9px;letter-spacing:.1em;cursor:pointer;border:1px solid var(--border);
+  transition:all .15s;background:transparent;color:var(--text2);
+}
+.mbtn.ok{background:var(--acc);color:var(--bg0);border-color:var(--acc);}
+.mbtn:hover{opacity:.82;}
+
+/* ── DASHBOARD ── */
+.dash-sec{margin-bottom:22px;}
+.dash-sec-title{
+  font-family:'Cinzel',serif;font-size:7.5px;letter-spacing:.22em;
+  color:var(--text2);margin-bottom:10px;padding-bottom:5px;
+  border-bottom:1px solid var(--border2);
+}
+.stat-grid{display:grid;gap:8px;}
+.sg-2{grid-template-columns:repeat(2,1fr);}
+.sg-3{grid-template-columns:repeat(3,1fr);}
+.sg-4{grid-template-columns:repeat(4,1fr);}
+@media(max-width:860px){.sg-4{grid-template-columns:repeat(2,1fr);}.sg-3{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:560px){.sg-3{grid-template-columns:repeat(2,1fr);}.sg-2{grid-template-columns:1fr 1fr;}}
+
+.sc{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;position:relative;overflow:hidden;
+}
+.sc::before{
+  content:'';position:absolute;top:0;left:0;width:2px;height:100%;
+  background:var(--acc);
+}
+.sc.acc-sote::before{background:var(--sote-acc);}
+.sc.acc-death::before{background:#7a2020;}
+.sc.acc-spell::before{background:var(--acc2);}
+.sc-lbl{
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:.18em;
+  color:var(--text2);margin-bottom:4px;
+}
+.sc-num{
+  font-family:'Cinzel',serif;font-size:21px;font-weight:700;
+  color:var(--acc);line-height:1;
+}
+.sc.acc-sote .sc-num{color:var(--sote-acc);}
+.sc.acc-death .sc-num{color:#d07070;}
+.sc.acc-spell .sc-num{color:var(--acc2);}
+.sc-line{display:flex;gap:6px;align-items:baseline;margin-top:3px;}
+.sc-ll{font-size:9.5px;color:var(--text2);font-style:italic;min-width:52px;}
+.sc-lv{font-size:11.5px;color:var(--text);}
+.sc-lv.g{color:var(--felled-text);}
+.sc-lv.r{color:#d07070;}
+.prog{height:3px;background:var(--bg4);border-radius:2px;margin-top:8px;overflow:hidden;}
+.prog-f{height:100%;border-radius:2px;background:var(--acc);transition:width .4s;}
+.sc.acc-sote .prog-f{background:var(--sote-acc);}
+.sc.acc-spell .prog-f{background:var(--acc2);}
+
+/* leaderboard */
+.ldr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+@media(max-width:620px){.ldr-grid{grid-template-columns:1fr;}}
+.ldr{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.ldr-hdr{
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:.15em;
+  color:var(--text2);padding:8px 12px 6px;border-bottom:1px solid var(--border2);
+}
+.ldr-row{display:flex;align-items:center;gap:8px;padding:5px 12px;border-bottom:1px solid var(--border2);}
+.ldr-row:last-child{border-bottom:none;}
+.ldr-n{font-size:9px;font-family:'Cinzel',serif;color:var(--text2);width:14px;flex-shrink:0;}
+.ldr-name{flex:1;font-size:11.5px;color:var(--text);line-height:1.2;}
+.ldr-d{font-family:'Cinzel',serif;font-size:13px;color:#d07070;flex-shrink:0;}
+.ldr-bar{height:2px;background:var(--bg4);border-radius:1px;margin-top:1px;}
+.ldr-bar-f{height:100%;background:#6a1818;border-radius:1px;}
+.ldr-empty{padding:10px 12px;font-size:11px;color:var(--text3);font-style:italic;}
+
+/* ── REGION BLOCKS ── */
+.region-block{
+  background:var(--bg1);border:1px solid var(--border2);
+  border-radius:10px;margin-bottom:10px;overflow:hidden;
+}
+.region-block.sote{background:var(--sote-bg);border-color:var(--sote-border);}
+.r-prog-bar{height:3px;background:var(--bg4);}
+.r-prog-fill{height:100%;background:var(--acc);transition:width .3s;}
+.sote .r-prog-fill{background:var(--sote-acc);}
+.r-hdr{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  cursor:pointer;user-select:none;transition:background .12s;
+}
+.r-hdr:hover{background:rgba(154,176,224,.025);}
+.sote .r-hdr:hover{background:rgba(184,40,24,.025);}
+.r-title{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:.13em;
+  color:var(--acc);flex:1;
+}
+.sote .r-title{color:var(--sote-acc);}
+.r-meta{font-size:10.5px;color:var(--text2);font-style:italic;}
+.r-chev{color:var(--text2);font-size:9px;transition:transform .2s;}
+.region-block.col .r-chev{transform:rotate(-90deg);}
+.region-block.col .r-body{display:none;}
+
+/* ── BOSS TABLE ── */
+.boss-tbl{width:100%;border-collapse:collapse;}
+.boss-tbl th{
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:.12em;
+  color:var(--text2);padding:7px 14px 5px;text-align:left;
+  border-bottom:1px solid var(--border2);
+}
+.boss-tbl td{padding:5px 14px;border-bottom:1px solid var(--border2);vertical-align:middle;}
+.boss-tbl tr:last-child td{border-bottom:none;}
+.boss-tbl tr:hover td{background:rgba(154,176,224,.02);}
+.sote .boss-tbl tr:hover td{background:rgba(184,40,24,.02);}
+.boss-tbl tr.killed-row td{background:rgba(30,74,46,.18);}
+.b-nm{font-size:12px;color:var(--text);}
+.b-nm.k{color:var(--felled-text);}
+.sote .b-nm{color:var(--sote-text);}
+.ck{
+  width:19px;height:19px;border:1px solid var(--border);border-radius:4px;
+  background:transparent;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;font-size:11px;color:transparent;transition:all .14s;flex-shrink:0;
+}
+.ck.on{background:var(--felled);border-color:var(--felled-border);color:var(--felled-text);}
+.sote .ck.on{background:var(--sote-acc);border-color:var(--sote-acc);color:#ffe8e0;}
+.d-inp{
+  width:48px;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text);font-family:'Crimson Pro',serif;font-size:12px;
+  padding:2px 5px;border-radius:4px;text-align:center;outline:none;
+}
+.d-inp:focus{border-color:var(--acc);}
+.sote .d-inp:focus{border-color:var(--sote-acc);}
+.d-inp.hot{color:#d07070;}
+
+/* ── ITEM SECTION (styled table rows, Style C) ── */
+.item-section{
+  background:var(--bg1);border:1px solid var(--border2);
+  border-radius:10px;margin-bottom:10px;overflow:hidden;
+}
+.cat-hdr{
+  background:var(--bg2);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 14px 6px;border-bottom:1px solid var(--border2);
+  cursor:pointer;user-select:none;
+}
+.cat-title{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:.18em;color:var(--acc);
+}
+.cat-right{display:flex;align-items:center;gap:10px;}
+.cat-cnt{font-size:10px;color:var(--text2);font-style:italic;}
+.cat-chev{color:var(--text2);font-size:9px;transition:transform .18s;}
+.cat-collapsed .cat-chev{transform:rotate(-90deg);}
+.cat-collapsed .cat-rows{display:none;}
+
+.item-row{
+  display:flex;align-items:center;gap:10px;padding:6px 14px;
+  border-bottom:1px solid var(--border2);transition:background .12s;cursor:pointer;
+}
+.item-row:last-child{border-bottom:none;}
+.item-row:hover{background:rgba(154,176,224,.025);}
+.item-row.got{background:rgba(30,74,46,.12);}
+.ick{
+  width:17px;height:17px;border:1px solid var(--border);border-radius:3px;
+  background:transparent;display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:transparent;transition:all .14s;flex-shrink:0;
+}
+.ick.on{background:var(--felled);border-color:var(--felled-border);color:var(--felled-text);}
+.i-name{
+  flex:1;font-size:12px;color:var(--text);
+  display:flex;align-items:center;gap:5px;
+}
+.item-row.got .i-name{color:var(--felled-text);}
+.dlc{
+  display:inline-flex;align-items:center;
+  background:rgba(184,40,24,.16);color:#c05030;
+  font-family:'Cinzel',serif;font-size:6.5px;letter-spacing:.08em;
+  padding:1px 5px;border-radius:3px;border:1px solid rgba(184,40,24,.28);
+  flex-shrink:0;
+}
+.i-loc{font-size:10.5px;color:var(--text2);font-style:italic;text-align:right;max-width:280px;}
+
+/* collapse-all toolbar */
+.sec-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;
+}
+.sec-toolbar-title{
+  font-family:'Cinzel',serif;font-size:7.5px;letter-spacing:.2em;color:var(--text2);
+}
+.tog-all-btn{
+  background:transparent;border:1px solid var(--border);color:var(--text2);
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:.1em;
+  padding:4px 10px;border-radius:5px;cursor:pointer;transition:all .15s;
+}
+.tog-all-btn:hover{background:var(--bg3);color:var(--text);border-color:var(--acc);}
+
+/* search */
+.search-bar{
+  width:100%;background:var(--bg2);border:1px solid var(--border);
+  color:var(--text);font-family:'Crimson Pro',serif;font-size:13px;
+  padding:8px 12px;border-radius:8px;outline:none;margin-bottom:12px;
+}
+.search-bar:focus{border-color:var(--acc);}
+.search-bar::placeholder{color:var(--text3);}
+
+@media(max-width:680px){
+  #topbar{padding:0 10px;gap:6px;}
+  .logo em{display:none;}
+  #shell{padding-left:12px;padding-right:12px;}
+  #subnav{margin:0 -12px;padding:0 12px;}
+}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<!-- MODAL -->
+<div id="modal-wrap">
+  <div class="modal" id="modal-box">
+    <h3 id="modal-title">NEW CHARACTER</h3>
+    <p id="modal-desc">Give your character a name. Each character tracks progress independently across all journeys (NG through NG+7).</p>
+    <input type="text" id="modal-inp" placeholder="Character name..." maxlength="28">
+    <div class="modal-btns">
+      <button class="mbtn" onclick="closeModal()">Cancel</button>
+      <button class="mbtn ok" id="modal-ok" onclick="confirmModal()">Create</button>
+    </div>
+  </div>
+</div>
+
+<div id="topbar">
+  <div class="logo">ELDEN RING<em>TRACKER</em></div>
+  <div class="tb-gap"></div>
+
+  <!-- Theme -->
+  <div class="theme-tog">
+    <button class="t-btn on" data-t="stars" onclick="setTheme('stars',this)">Age of Stars</button>
+    <button class="t-btn" data-t="elden" onclick="setTheme('elden',this)">Elden Ring</button>
+    <button class="t-btn" data-t="sote" onclick="setTheme('sote',this)">Shadow</button>
+  </div>
+
+  <!-- Character + Journey -->
+  <div class="pt-wrap">
+    <select class="sel" id="char-sel" onchange="onCharChange(this.value)"></select>
+    <button class="icon-btn dim" onclick="openNewChar()" title="New character">+</button>
+    <div class="pt-sep">/</div>
+    <select class="sel" id="journey-sel" onchange="onJourneyChange(this.value)"></select>
+  </div>
+
+  <button class="csv-btn" onclick="exportCSV()">&#8659; CSV</button>
+</div>
+
+<div id="shell">
+  <div id="subnav">
+    <button class="snav on" onclick="showTab('dashboard',this)">Dashboard</button>
+    <button class="snav" onclick="showTab('bosses',this)">Bosses</button>
+    <button class="snav sote-tab" onclick="showTab('sote',this)">Shadow of the Erdtree</button>
+    <button class="snav" onclick="showTab('weapons',this)">Weapons</button>
+    <button class="snav" onclick="showTab('spells',this)">Sorceries &amp; Incantations</button>
+    <button class="snav" onclick="showTab('spirits',this)">Spirit Ashes</button>
+    <button class="snav" onclick="showTab('talismans',this)">Talismans</button>
+  </div>
+
+  <div id="tab-dashboard" class="tab-pane on"><div id="dash-body"></div></div>
+  <div id="tab-bosses" class="tab-pane">
+    <input class="search-bar" placeholder="Search bosses..." oninput="filterBosses(this.value)" id="boss-search">
+    <div class="sec-toolbar">
+      <span class="sec-toolbar-title">BASE GAME REGIONS</span>
+      <button class="tog-all-btn" onclick="collapseAll('boss-body')">Collapse All</button>
+    </div>
+    <div id="boss-body"></div>
+  </div>
+  <div id="tab-sote" class="tab-pane">
+    <input class="search-bar" style="border-color:var(--sote-border);" placeholder="Search Shadow of the Erdtree bosses..." oninput="filterSote(this.value)">
+    <div class="sec-toolbar">
+      <span class="sec-toolbar-title" style="color:var(--sote-text2)">SHADOW REGIONS</span>
+      <button class="tog-all-btn" style="border-color:var(--sote-border);color:var(--sote-text2);" onclick="collapseAll('sote-body')">Collapse All</button>
+    </div>
+    <div id="sote-body"></div>
+  </div>
+  <div id="tab-weapons" class="tab-pane">
+    <input class="search-bar" placeholder="Search weapons..." oninput="renderWeapons(this.value)">
+    <div class="sec-toolbar">
+      <span class="sec-toolbar-title">WEAPON CATEGORIES</span>
+      <button class="tog-all-btn" onclick="collapseAll('weapons-body')">Collapse All</button>
+    </div>
+    <div id="weapons-body"></div>
+  </div>
+  <div id="tab-spells" class="tab-pane">
+    <input class="search-bar" placeholder="Search sorceries &amp; incantations..." oninput="renderSpells(this.value)">
+    <div class="sec-toolbar">
+      <span class="sec-toolbar-title">SPELL CATEGORIES</span>
+      <button class="tog-all-btn" onclick="collapseAll('spells-body')">Collapse All</button>
+    </div>
+    <div id="spells-body"></div>
+  </div>
+  <div id="tab-spirits" class="tab-pane">
+    <input class="search-bar" placeholder="Search spirit ashes..." oninput="renderSpirits(this.value)">
+    <div class="sec-toolbar">
+      <span class="sec-toolbar-title">SPIRIT ASHES</span>
+      <button class="tog-all-btn" onclick="collapseAll('spirits-body')">Collapse All</button>
+    </div>
+    <div id="spirits-body"></div>
+  </div>
+  <div id="tab-talismans" class="tab-pane">
+    <input class="search-bar" placeholder="Search talismans..." oninput="renderTalismans(this.value)">
+    <div class="sec-toolbar">
+      <span class="sec-toolbar-title">TALISMANS</span>
+      <button class="tog-all-btn" onclick="collapseAll('talismans-body')">Collapse All</button>
+    </div>
+    <div id="talismans-body"></div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════
+   RAW DATA
+════════════════════════════════════════════════════ */
+const RAW = {"bosses": {"LIMGRAVE": [{"name": "🌻Beastman of Farum Azula (Groveside Cave)", "killed": true, "attempts": 1}, {"name": "🌑Bell Bearing Hunter (Warmaster's Shack)", "killed": true, "attempts": 7}, {"name": "💀Black Knife Assassin (Deathtouched Catacombs)", "killed": true, "attempts": 1}, {"name": "⚪Bloodhound Knight Darriwil (Forlorn Hound Evergaol)", "killed": true, "attempts": 1}, {"name": "⚪Crucible Knight (Stormhill Evergaol)", "killed": true, "attempts": 1}, {"name": "🌑Death Bird (Stormhill)", "killed": true, "attempts": 1}, {"name": "🌻Demi-Human Chief Duo (Coastal Cave)", "killed": true, "attempts": 1}, {"name": "🌻Erdtree Burial Watchdog (Stormfoot Catacombs)", "killed": true, "attempts": 1}, {"name": "🗡️Flying Dragon Agheel (Lake Agheel)", "killed": true, "attempts": 3}, {"name": "💎Godrick the Grafted*! (Stormveil Castle)", "killed": true, "attempts": 5}, {"name": "🌻Grafted Scion (Chapel of Anticipation)", "killed": true, "attempts": 2}, {"name": "🌻Grave Warden Duelist (Murkwater Catacombs)", "killed": true, "attempts": 2}, {"name": "🌻Guardian Golem (Highroad Cave)", "killed": true, "attempts": 1}, {"name": "🌻Mad Pumpkin Head (Waypoint Ruins)", "killed": true, "attempts": 2}, {"name": "🗡️Margit, the Fell Omen* (Stormveil Castle)", "killed": true, "attempts": 5}, {"name": "🌑Night's Cavalry (Limgrave)", "killed": true, "attempts": 1}, {"name": "🌻Patches (Murkwater Cave)", "killed": true, "attempts": 1}, {"name": "🌻Soldier of Godrick (Fringefolk Hero's Grave)", "killed": true, "attempts": 1}, {"name": "🌻Stonedigger Troll (Limgrave Tunnels)", "killed": true, "attempts": 1}, {"name": "💀Tibia Mariner (Summonwater Village)", "killed": true, "attempts": 1}, {"name": "🌻Tree Sentinel (Limgrave)", "killed": true, "attempts": 1}, {"name": "🌻Ulcerated Tree Spirit (Fringefolk Hero's Grave)", "killed": true, "attempts": 1}], "WEEPING PENINSULA": [{"name": "⚪Ancient Hero of Zamor (Weeping Evergaol)", "killed": true, "attempts": 1}, {"name": "🌻Cemetery Shade (Tombsward Catacombs)", "killed": true, "attempts": 1}, {"name": "🌑Death Bird (Weeping Peninsula)", "killed": true, "attempts": 1}, {"name": "🌳Erdtree Avatar (Minor Erdtree)", "killed": true, "attempts": 1}, {"name": "🌻Erdtree Burial Watchdog (Impaler Catacombs)", "killed": true, "attempts": 2}, {"name": "🗡️Leonine Misbegotten* (Castle Morne)", "killed": true, "attempts": 1}, {"name": "🌻Miranda the Blighted Bloom (Tombsward Cave)", "killed": true, "attempts": 1}, {"name": "🌑Night's Cavalry (Weeping Peninsula)", "killed": true, "attempts": 1}, {"name": "🌻Runebear (Earthbore Cave)", "killed": true, "attempts": 1}, {"name": "🌻Scaly Misbegotten (Morne Tunnel)", "killed": true, "attempts": 1}], "LIURNIA OF THE LAKES": [{"name": "⚪Adan, Thief of Fire (Malefactor's Evergaol)", "killed": true, "attempts": 1}, {"name": "⚪Alecto, Black Knife Ringleader (Ringleader's Evergaol)", "killed": true, "attempts": 4}, {"name": "🌑Bell Bearing Hunter (Church of Vows)", "killed": true, "attempts": 2}, {"name": "🌻Black Knife Assassin (Black Knife Catacombs)", "killed": true, "attempts": 4}, {"name": "🌻Bloodhound Knight (Lakeside Crystal Cave)", "killed": true, "attempts": 1}, {"name": "⚪Bols, Carian Knight (Cuckoo's Evergaol)", "killed": true, "attempts": 1}, {"name": "💀Cemetery Shade (Black Knife Catacombs)", "killed": true, "attempts": 2}, {"name": "🌻Cleanrot Knight (Stillwater Cave)", "killed": true, "attempts": 1}, {"name": "🌻Crystalian Duo (Academy Crystal Cave)", "killed": true, "attempts": 2}, {"name": "🌻Crystalian (Raya Lucaria Crystal Tunnel)", "killed": true, "attempts": 1}, {"name": "🌑Death Bird (Liurnia South)", "killed": true, "attempts": 1}, {"name": "🌑Death Rite Bird (Central Liurnia)", "killed": true, "attempts": 1}, {"name": "🌳Erdtree Avatar (Northeast Minor Erdtree)", "killed": true, "attempts": 1}, {"name": "🌳Erdtree Avatar (Southwest Minor Erdtree)", "killed": true, "attempts": 1}, {"name": "🌻Erdtree Burial Watchdog (Cliffbottom Catacombs)", "killed": true, "attempts": 1}, {"name": "🗡️Glintstone Dragon Adula (Cathedral of Manus Celes)", "killed": true, "attempts": 3}, {"name": "🗡️Glintstone Dragon Smarag (Lake of Liurnia)", "killed": true, "attempts": 4}, {"name": "🗡️Magma Wyrm Makar* (Ruin Strewn Precipice)", "killed": true, "attempts": 1}, {"name": "🌑Night's Cavalry (Gate Town Bridge)", "killed": true, "attempts": 1}, {"name": "🌑Night's Cavalry (Bellum Highway)", "killed": true, "attempts": 3}, {"name": "🌻Omenkiller (Village of the Albinaurics)", "killed": true, "attempts": 1}, {"name": "⚪Onyx Lord (Royal Grave Evergaol)", "killed": true, "attempts": 1}, {"name": "🗡️Red Wolf of Radagon* (Raya Lucaria Academy)", "killed": true, "attempts": 2}, {"name": "⚔️Rennala, Queen of the Full Moon*! (Raya Lucaria Academy)", "killed": true, "attempts": 2}, {"name": "🗡️Royal Knight Loretta* (Caria Manor)", "killed": true, "attempts": 1}, {"name": "🌻Royal Revenant (Kingsrealm Ruins)", "killed": true, "attempts": 4}, {"name": "🌻Spirit-Caller Snail (Road's End Catacombs)", "killed": true, "attempts": 1}, {"name": "💀Tibia Mariner (Liurnia)", "killed": true, "attempts": 1}], "CAELID": [{"name": "⚪Battlemage Hugues (Sellia Evergaol)", "killed": true, "attempts": 1}, {"name": "🌻Beastman of Farum Azula (Dragonsbarrow Cave)", "killed": true, "attempts": 5}, {"name": "🌑Bell Bearing Hunter (Isolated Merchant's Shack)", "killed": true, "attempts": 6}, {"name": "🌻Black Blade Kindred (Bestial Sanctum)", "killed": true, "attempts": 7}, {"name": "🌻Cemetery Shade (Caelid Catacombs)", "killed": true, "attempts": 1}, {"name": "🌻Cleanrot Knight Duo (Abandoned Cave)", "killed": true, "attempts": 3}, {"name": "🌻Commander O'Neil (Aeonia Swamp)", "killed": true, "attempts": 3}, {"name": "🌑Death Rite Bird (Southern Aeonia Swamp Bank)", "killed": true, "attempts": 1}, {"name": "🗡️Decaying Ekzykes (Caelid Highway South)", "killed": true, "attempts": 2}, {"name": "🌻Erdtree Burial Watchdog Duo (Minor Erdtree Catacombs)", "killed": true, "attempts": 1}, {"name": "🌻Fallingstar Beast (Sellia Crystal Tunnel)", "killed": true, "attempts": 2}, {"name": "🗡️Flying Dragon Greyll (Dragonsbarrow Bridge)", "killed": true, "attempts": 1}, {"name": "🌻Frenzied Duelist (Gaol Cave)", "killed": true, "attempts": 1}, {"name": "🌻Godskin Apostle (Divine Tower of Caelid)", "killed": true, "attempts": 5}, {"name": "🌻Leonine Misbegotten & Crucible Knight (Redmane Castle)", "killed": true, "attempts": 4}, {"name": "🌻Mad Pumpkin Head Duo (Caelem Ruins)", "killed": true, "attempts": 2}, {"name": "🗡️Magma Wyrm (Gael Tunnel)", "killed": true, "attempts": 1}, {"name": "🌑Night's Cavalry (Caelid Highway South)", "killed": true, "attempts": 1}, {"name": "🌑Night's Cavalry (Dragonsbarrow East)", "killed": true, "attempts": 5}, {"name": "🌻Nox Swordstress & Nox Priest (Sellia, Town of Sorcery)", "killed": true, "attempts": 1}, {"name": "🌳Putrid Avatar (Northwest Minor Erdtree)", "killed": true, "attempts": 1}, {"name": "🌳Putrid Avatar (Dragonsbarrow Minor Erdtree)", "killed": true, "attempts": 3}, {"name": "🌻Putrid Crystalian Trio (Sellia Hideaway)", "killed": true, "attempts": 4}, {"name": "🌻Putrid Tree Spirit (War-Dead Catacombs)", "killed": true, "attempts": 4}, {"name": "💎Starscourge Radahn*! (Redmane Castle)", "killed": true, "attempts": 2}], "ALTUS PLATEAU": [{"name": "🗡️Ancient Dragon Lansseax (Altus Plateau)", "killed": true, "attempts": 2}, {"name": "🌻Ancient Hero of Zamor (Sainted Hero's Grave)", "killed": true, "attempts": 1}, {"name": "🌻Black Knife Assassin (Sainted Hero's Grave)", "killed": true, "attempts": 1}, {"name": "🌻Crystalian Duo (Altus Tunnel)", "killed": true, "attempts": 1}, {"name": "🌻Demi-Human Queen Gilika (Lux Ruins)", "killed": true, "attempts": 1}, {"name": "🗡️Elemer Of The Briar* (Shaded Castle)", "killed": true, "attempts": 6}, {"name": "🌻Fallingstar Beast (Leyndell Western Gate)", "killed": true, "attempts": 2}, {"name": "⚪Godefroy The Grafted (Golden Lineage Evergaol)", "killed": true, "attempts": 5}, {"name": "🌻Godskin Apostle (Windmill Heights)", "killed": true, "attempts": 3}, {"name": "🌻Miranda & Omenkiller (Perfumer's Grotto)", "killed": true, "attempts": 1}, {"name": "🌑Night's Cavalry (Altus Plateau)", "killed": true, "attempts": 1}, {"name": "🌻Sanguine Noble (Writheblood Ruins)", "killed": true, "attempts": 1}, {"name": "🌻Stonedigger Troll (Old Altus Tunnel)", "killed": true, "attempts": 1}, {"name": "🌻Tree Sentinel Duo (Leyndell Western Gate)", "killed": true, "attempts": 4}, {"name": "🌳Wormface (Minor Erdtree)", "killed": true, "attempts": 1}], "MT. GELMIR": [{"name": "🌻Abductor Virgins (Subterranean Inquisition Chamber)", "killed": true, "attempts": 4}, {"name": "🌻Black Knife Assassin (Sage's Cave)", "killed": true, "attempts": 1}, {"name": "🌻Demi-Human Queen Maggie (Hermit Village)", "killed": true, "attempts": 1}, {"name": "🌻Demi-Human Queen Margot (Volcano Cave)", "killed": true, "attempts": 1}, {"name": "🌻Erdtree Burial Watchdog (Wyndham Catacombs)", "killed": true, "attempts": 1}, {"name": "🌻Full-Grown Fallingstar Beast (Mt. Gelmir)", "killed": true, "attempts": 3}, {"name": "🌻Godskin Noble* (Volcano Manor)", "killed": true, "attempts": 1}, {"name": "🌻Kindred of Rot (Seethewater Cave)", "killed": true, "attempts": 2}, {"name": "🌻Perfumer Tricia & Misbegotten (Unsightly Catacombs)", "killed": true, "attempts": 1}, {"name": "🗡️Magma Wyrm (Mt. Gelmir Lava Pool)", "killed": true, "attempts": 1}, {"name": "🌻Necromancer Garris (Sage's Cave)", "killed": true, "attempts": 1}, {"name": "💎Rykard, Lord of Blasphemy*! (Volcano Manor)", "killed": true, "attempts": 10}, {"name": "💀Red Wolf Of The Champion (Gelmir Hero's Grave)", "killed": true, "attempts": 2}, {"name": "💀Tibia Mariner (Wyndham Ruins)", "killed": true, "attempts": 1}, {"name": "🌳Ulcerated Tree Spirit (Minor Erdtree)", "killed": true, "attempts": 1}], "LEYNDELL, ROYAL CAPITAL": [{"name": "🌑Bell Bearing Hunter (Hermit Merchant's Shack)", "killed": true, "attempts": 1}, {"name": "🗡️Crucible Knight Ordovis & Crucible Knight (Auriza's Hero Grave)", "killed": true, "attempts": 6}, {"name": "🌑Death Bird (Hermit Merchant's Shack)", "killed": true, "attempts": 1}, {"name": "🗡️Draconic Tree Sentinel (Capital Entrance)", "killed": true, "attempts": 3}, {"name": "🌻Esgar, Priest of Blood (Leyndell Catacombs)", "killed": true, "attempts": 1}, {"name": "🌻Fell Twins (Divine Tower of East Altus)", "killed": true, "attempts": 1}, {"name": "⚔️Godfrey, First Elden Lord* (Erdtree Sanctuary)", "killed": true, "attempts": 1}, {"name": "🌻Grave Warden Duelist (Auriza Side Tomb)", "killed": true, "attempts": 1}, {"name": "💎Morgott, the Omen King*! (Elden Throne)", "killed": true, "attempts": 1}, {"name": "🗡️Mohg, The Omen* (Subterranean Shunning Grounds)", "killed": true, "attempts": 1}, {"name": "🌻Onyx Lord (Sealed Tunnel)", "killed": true, "attempts": 1}], "MOUNTAINTOPS OF THE GIANTS": [{"name": "🌻Ancient Hero of Zamor (Giant-Conquering Hero's Grave)", "killed": true, "attempts": 1}, {"name": "🗡️Borealis the Freezing Fog (Freezing Lake)", "killed": true, "attempts": 2}, {"name": "🌻Blackblade Kindred (Forbidden Lands)", "killed": true, "attempts": 1}, {"name": "🗡️Commander Niall* (Castle Sol)", "killed": true, "attempts": 1}, {"name": "🌑Death Rite Bird (Snow Valley)", "killed": true, "attempts": 4}, {"name": "🌳Erdtree Avatar (Minor Erdtree)", "killed": true, "attempts": 1}, {"name": "⚔️Fire Giant*! (Flame Peak)", "killed": true, "attempts": 1}, {"name": "🌻Godskin Apostle & Godskin Noble (Spiritcallers Cave)", "killed": true, "attempts": 5}, {"name": "🌑Night's Cavalry (Forbidden Lands)", "killed": true, "attempts": 1}, {"name": "⚪Roundtable Knight Vyke (Lord Contender's Evergaol)", "killed": true, "attempts": 1}, {"name": "💀Ulcerated Tree Spirit (Giants' Mountaintops Catacombs)", "killed": true, "attempts": 1}], "LEYNDELL, ASHEN CAPITAL": [{"name": "⚔️Hoarah Loux, Warrior*! (Ashen Capital)", "killed": true, "attempts": 1}, {"name": "🗡️Sir Gideon Ofnir, the All-Knowing (Ashen Capital)", "killed": true, "attempts": 1}], "CONSECRATED SNOWFIELD": [{"name": "🗡️Astel, Stars of Darkness (Yelough Anix Tunnel)", "killed": true, "attempts": 2}, {"name": "🌑Death Rite Bird (West Mountaintops)", "killed": true, "attempts": 1}, {"name": "🗡️Great Wrym Theodorix (Outside Cave of the Forlorn)", "killed": true, "attempts": 2}, {"name": "🌻Misbegotten Crusader (Cave of the Forlorn)", "killed": true, "attempts": 1}, {"name": "🌑Night's Cavalry Duo (Inner Consecrated Snowfields)", "killed": true, "attempts": 1}, {"name": "🌳Putrid Avatar (Minor Erdtree)", "killed": true, "attempts": 1}, {"name": "🌻Putrid Grave Warden Duelist (Consecrated Snowfield Catacombs)", "killed": true, "attempts": 2}, {"name": "💀Stray Mimic Tear (Hidden Path to the Haligtree)", "killed": true, "attempts": 1}], "MIQUELLA'S HALIGTREE": [{"name": "🗡️Loretta, Knight of the Haligtree* (Miquella's Haligtree)", "killed": true, "attempts": 1}, {"name": "💎Malenia, Blade of Miquella*! (Haligtree Roots)", "killed": true, "attempts": 20}], "SIOFRA RIVER": [{"name": "🗡️Ancestor Spirit* (Hallowhorn Grounds)", "killed": true, "attempts": 1}, {"name": "🗡️Dragonkin Soldier (Soifra River Waterfall)", "killed": true, "attempts": 2}, {"name": "🗡️Dragonkin Soldier of Nokstella* (Ainsel Throne)", "killed": true, "attempts": 1}], "LAKE OF ROT": [{"name": "⚔️Astel, Naturalborn of the Void*! (Grand Cloister)", "killed": true, "attempts": 2}, {"name": "🗡️Dragonkin Soldier (Lake of Rot)", "killed": true, "attempts": 3}, {"name": "💎Mohg, Lord of Blood*! (Mohgwyn Dynasty Mausoleum)", "killed": true, "attempts": 5}], "CRUMBLING FARUM AZULA": [{"name": "🗡️Godskin Duo* (Dragon Temple)", "killed": true, "attempts": 1}, {"name": "⚔️Maliketh, the Black Blade*! (Great Bridge)", "killed": true, "attempts": 3}, {"name": "⚔️Dragonlord Placidusax*! (Secret Area)", "killed": true, "attempts": 4}], "AINSEL RIVER": [{"name": "🗡️Dragonkin Soldier of Nokstella* (Ainsel Throne)", "killed": true, "attempts": 1}], "MOHGWYN PALACE": [{"name": "💎Mohg, Lord of Blood*! (Mohgwyn Dynasty Mausoleum)", "killed": true, "attempts": 5}], "NOKRON, ETERNAL CITY": [{"name": "🗡️Mimic Tear* (Nokron, Eternal City)", "killed": true, "attempts": 1}, {"name": "⚔️Regal Ancestor Spirit*! (Hallowhorn Grounds)", "killed": true, "attempts": 1}, {"name": "🗡️Valiant Gargoyle Duo* (Soifra Aqueduct)", "killed": true, "attempts": 2}], "DEEPROOT DEPTHS": [{"name": "🌻Crucible Knight Siluria (Deeproot Depths)", "killed": true, "attempts": 1}, {"name": "🌻Fia's Champions (Prince of Death's Throne)", "killed": true, "attempts": 1}, {"name": "⚔️Lichdragon Fortissax*! (Prince of Death's Throne)", "killed": true, "attempts": 1}], "ELDEN THRONE": [{"name": "👑Radagon of the Golden Order / Elden Beast*! (Elden Throne)", "killed": true, "attempts": 8}]}, "sote_bosses": {"GRAVESITE PLAIN": [{"name": "Blackgaol Knight", "killed": true, "attempts": 2}, {"name": "Chief Bloodfiend", "killed": true, "attempts": 1}, {"name": "Demi-Human Swordmaster Onze", "killed": true, "attempts": 2}, {"name": "Divine Beast Dancing Lion", "killed": true, "attempts": 2}, {"name": "Ghostflame Dragon", "killed": true, "attempts": 3}, {"name": "Rellana Twin Moon Knight", "killed": true, "attempts": 7}, {"name": "Red Bear", "killed": true, "attempts": 1}], "SCADU ALTUS": [{"name": "Black Knight Edreed", "killed": true, "attempts": 1}, {"name": "Black Knight Garrew", "killed": true, "attempts": 2}, {"name": "Count Ymir, Mother of Fingers", "killed": true, "attempts": 1}, {"name": "Curseblade Labirith", "killed": true, "attempts": 4}, {"name": "Death Knight", "killed": true, "attempts": 10}, {"name": "Dryleaf Dane", "killed": true, "attempts": 1}, {"name": "Ghostflame Dragon", "killed": true, "attempts": 8}, {"name": "Golden Hippopotamus", "killed": true, "attempts": 1}, {"name": "Messmer the Impaler", "killed": true, "attempts": 13}, {"name": "Metyr, Mother of Fingers", "killed": true, "attempts": 2}, {"name": "Rakshasa", "killed": true, "attempts": 1}, {"name": "Jori, Elder Inquisitor", "killed": true, "attempts": 1}, {"name": "Ralva the Great Red Bear", "killed": true, "attempts": 1}, {"name": "Tree Sentinel", "killed": true, "attempts": 1}], "CERULEAN COAST": [{"name": "Dancer of Ranah", "killed": true, "attempts": 2}, {"name": "Demi-Human Queen Marigga", "killed": true, "attempts": 1}, {"name": "Ghostflame Dragon", "killed": true, "attempts": 7}, {"name": "Putrescent Knight", "killed": true, "attempts": 5}], "RAUH BASE": [{"name": "Death Knight", "killed": true, "attempts": 1}, {"name": "Rugalea the Great Red Bear", "killed": true, "attempts": 1}], "CHARO'S HIDDEN GRAVE": [{"name": "Death Rite Bird", "killed": true, "attempts": 1}, {"name": "Lamenter", "killed": true, "attempts": 1}, {"name": "Tibia Mariner", "killed": true, "attempts": 1}], "JAGGED PEAK": [{"name": "Ancient Dragon-Man", "killed": true, "attempts": 2}, {"name": "Ancient Dragon Senessax", "killed": true, "attempts": 2}, {"name": "Bayle the Dread", "killed": true, "attempts": 4}, {"name": "Jagged Peak Drake", "killed": true, "attempts": 1}], "ABYSSAL WOODS": [{"name": "Midra Lord of Frenzied Flame", "killed": true, "attempts": 8}], "SCADUVIEW": [{"name": "Fallingstar Beast", "killed": true, "attempts": 2}, {"name": "Scadutree Avatar", "killed": true, "attempts": 10}, {"name": "Commander Gaius", "killed": true, "attempts": 5}, {"name": "Tree Sentinel", "killed": true, "attempts": 3}], "ANCIENT RUINS OF RAUH": [{"name": "Divine Beast Dancing Lion", "killed": true, "attempts": 1}, {"name": "Romina, Saint of the Bud", "killed": true, "attempts": 12}], "ENIR-ILIM": [{"name": "Leda and Allies", "killed": true, "attempts": 3}, {"name": "Promised Consort Radahn", "killed": true, "attempts": 5}]}, "weapons": {"DAGGERS": [{"name": "Dagger", "location": "💰Twin Maiden Husk Shop, 🦴Foot Soldier Drop", "collected": true}, {"name": "Parrying Dagger", "location": "💰Patches Shop", "collected": false}, {"name": "Misericorde", "location": "🌱Stormveil Castle", "collected": true}, {"name": "Great Knife", "location": "🌱Craftmans Shack, 🦴Demihuman Assassin Drop", "collected": false}, {"name": "Bloodstained Dagger", "location": "🦴Demihuman Cheif Drop, 🦴Demihuman Assassin Drop", "collected": false}, {"name": "Erdsteel Dagger", "location": "🌱Leyndell Royal Capital, 📜Kenneth Haight Questline", "collected": true}, {"name": "Wakizashi", "location": "🌱Gaol Cave", "collected": false}, {"name": "Celebrant's Sickle", "location": "🦴Celebrants Drop", "collected": false}, {"name": "Ivory Sickle", "location": "🌱Village of the Albinaurics", "collected": true}, {"name": "Crystal Knife", "location": "🌱Raya Lucaria Crystal Tunnel", "collected": true}, {"name": "Scorpion's Stinger", "location": "🌱Grand Cloister", "collected": true}, {"name": "Cinquedea", "location": "🌱Bestial Sanctum Exterior ", "collected": false}, {"name": "Glintstone Kris", "location": "📜Sorceress Sellen Questline", "collected": false}, {"name": "Reduvia", "location": "💀Bloody Finger Nerijus Drop", "collected": false}, {"name": "Blade of Calling", "location": "🌱Elevator to Forbidden Lands", "collected": true}, {"name": "Black Knife", "location": "💀Black Knife Assassin Drop (Sainted Hero's Grave)", "collected": true}], "LIGHT BOWS": [{"name": "Shortbow", "location": "💰Nomadic Merchant Shop (West Limgrave), 🦴Marionette Drop (Bow Wielding)", "collected": false}, {"name": "Composite Bow", "location": "💰Nomadic Merchant Shop (Liurnia of the Lakes Central)", "collected": false}, {"name": "Red Branch Shortbow", "location": "🦴Page Drop", "collected": false}, {"name": "Misbegotten Shortbow", "location": "🦴Winged Misbegotten Drop", "collected": false}, {"name": "Harp Bow", "location": "📜Champion's Song Painting Reward", "collected": false}], "BOWS": [{"name": "Longbow", "location": "💰Twin Maiden Husks Shop", "collected": false}, {"name": "Albinauric Bow", "location": "🦴Albinauric (1st Gen) Archer Drop", "collected": false}, {"name": "Black Bow", "location": "🌱Leyndell Royal Capital", "collected": false}, {"name": "Pulley Bow", "location": "🌱Mt. Gelmir", "collected": true}, {"name": "Horn Bow", "location": "🌱Siofra River (Hallowhorn Grounds)", "collected": false}, {"name": "Serpent Bow", "location": "🌱Abandoned Cave", "collected": true}, {"name": "Erdtree Bow", "location": "🌱Leyndell Royal Capital (Erdtree Sanctuary)", "collected": false}], "GREATBOWS": [{"name": "Greatbow", "location": "🌱Highway Lookout Tower (Altus Plateau), 🦴Knight Drop (Bow Weilding)", "collected": false}, {"name": "Golem Greatbow", "location": "🦴Golem Archer Drop", "collected": false}, {"name": "Erdtree Greatbow", "location": "🦴Chariot Drop (Fringefolk Hero's Grave)", "collected": false}, {"name": "Lion Greatbow", "location": "💎Remembrance of the Starscourge option", "collected": false}], "STRAIGHT SWORDS": [{"name": "Short Sword", "location": "💰Nomadic Merchant Shop (North Limgrave), 🦴Highwayman Drop", "collected": true}, {"name": "Longsword", "location": "💰Twin Maiden Husk Shop", "collected": true}, {"name": "Broadsword", "location": "💰Nomadic Merchant Shop (West Limgrave)", "collected": false}, {"name": "Weathered Straight Sword", "location": "🦴Commoner Drop", "collected": false}, {"name": "Lordsworn's Straight Sword", "location": "🦴Soldier Drop", "collected": false}, {"name": "Noble's Slender Sword", "location": "🦴Wandering Noble Drop", "collected": false}, {"name": "Cane Sword", "location": "🌱Leyndell Royal Capital", "collected": true}, {"name": "Warhawk's Talon", "location": "🦴Warhawk Drop", "collected": false}, {"name": "Lazuli Glintstone Sword", "location": "🦴Lazuli Sorcerer Drop", "collected": false}, {"name": "Carian Knight's Sword", "location": "🌱Liurnia of the Lakes Wagon", "collected": false}, {"name": "Crystal Sword", "location": "🌱Village of the Albinaurics", "collected": false}, {"name": "Rotten Crystal Sword", "location": "🌱Elphael, Brace of the Haligtree", "collected": false}, {"name": "Miquellan Knight's Sword", "location": "🌱Elphael, Brace of the Haligtree", "collected": false}, {"name": "Ornamental Straight Sword", "location": "💀Grafted Scion (Chapel of Anticipation)", "collected": false}, {"name": "Golden Epitaph", "location": "🌱Auriza Hero's Grave", "collected": false}, {"name": "Sword of St. Trina", "location": "🌱Forsaken Ruins", "collected": false}, {"name": "Regalia of Eochaid", "location": "🌱Gaol Cave", "collected": false}, {"name": "Coded Sword", "location": "🌱Leyndell Royal Capital", "collected": true}, {"name": "Sword of Night and Flame*", "location": "🌱Caria Manor", "collected": true}], "CROSSBOWS": [{"name": "Soldier's Crossbow", "location": "🦴Foot Soldier Drop (Crossbow Wielding)", "collected": false}, {"name": "Light Crossbow", "location": "💰Nomadic Merchant Shop (Weeping Peninsula)", "collected": false}, {"name": "Heavy Crossbow", "location": "🦴Soldier Drop", "collected": false}, {"name": "Arbalest", "location": "🌱Stormveil Castle", "collected": false}, {"name": "Pulley Crossbow", "location": "🌱Craftman's Shack", "collected": false}, {"name": "Full Moon Crossbow", "location": "🌱Raya Lucaria Academy Rooftops", "collected": false}, {"name": "BALLISTAE", "location": "LOCATION", "collected": true}, {"name": "Hand Ballista", "location": "🌱Forest Lookout Tower (Weeping Peninsula)", "collected": true}, {"name": "Jar Cannon", "location": "💀Demihuman Queen Margot Drop", "collected": true}, {"name": "STAFFS", "location": "LOCATION", "collected": true}, {"name": "Astrologer's Staff", "location": "💰Nomadic Merchant Shop (Liurnia of the Lakes South)", "collected": false}, {"name": "Glintstone Staff", "location": "🦴Noble Sorcerer Drop", "collected": true}, {"name": "Academy Glintstone Staff", "location": "📜Thops Drop (Thops' Questline)", "collected": false}, {"name": "Digger's Staff", "location": "🦴Sorcerer Miner Drop", "collected": false}, {"name": "Demihuman Queen's Staff", "location": "🦴Demihuman Queen Drop (Weeping Peninsula)", "collected": true}, {"name": "Azur's Glintstone Staff", "location": "📜Azur Drop (Sorceress Sellen Questline)", "collected": true}, {"name": "Lusat's Glintstone Staff", "location": "📜Lusat Drop (Sorceress Sellen Questline)", "collected": true}, {"name": "Carian Glinstone Staff", "location": "🌱Carian Study Hall", "collected": false}, {"name": "Carian Glintblade Staff", "location": "🌱Highway Lookout Tower (Liurnia of the Lakes)", "collected": false}, {"name": "Carian Regal Scepter", "location": "💎Remembrance of the Full Moon Queen option", "collected": true}, {"name": "Albinauric Staff", "location": "🌱Volcano Manor", "collected": false}, {"name": "Staff of Loss", "location": "🌱Sellia, Town of Sorcery", "collected": true}, {"name": "Gelmir Glintstone Staff", "location": "🦴Man-Serpent Drop (Staff Wielding)", "collected": false}, {"name": "Crystal Staff", "location": "🌱Academy Crystal Cave", "collected": false}, {"name": "Rotten Crystal Staff", "location": "🦴Putrid Crystalian Mage Drop", "collected": false}, {"name": "Meteorite Staff", "location": "🌱Street of Sage's Ruins (Caelid)", "collected": true}, {"name": "Staff of the Guilty", "location": "🦴Fire Sage Drop", "collected": false}, {"name": "Prince of Death's Staff", "location": "🌱Deeproot Depths", "collected": true}, {"name": "SEALS", "location": "LOCATION", "collected": true}, {"name": "Finger Seal", "location": "💰Twin Maiden Husks Shop", "collected": true}, {"name": "Erdtree Seal", "location": "🌱Volcano Manor", "collected": true}, {"name": "Golden Order Seal", "location": "🌱Minor Erdtree Church (Leyndell Royal Capital)", "collected": true}, {"name": "Gravel Stone Seal", "location": "🦴Leyndell Royal Capital specific Knight Drop", "collected": true}, {"name": "Giant's Seal", "location": "🌱Giant Conquering Hero's Grave", "collected": true}, {"name": "Godslayer's Seal", "location": "🌱Stormveil Castle", "collected": true}, {"name": "Clawmark Seal", "location": "📜1st Deathroot Reward (Gurranq, Beast Clergyman)", "collected": true}, {"name": "Frezied Flame Seal", "location": "📜Hyetta's Questline", "collected": false}, {"name": "Dragon Communion Seal", "location": "🦴Fringefolk Hero's Grave (Banished Knight's Drop)", "collected": false}, {"name": "OFF-HAND WEAPONS", "location": "", "collected": false}, {"name": "SMALL SHIELDS", "location": "LOCATION", "collected": true}, {"name": "Buckler", "location": "💰Gatekeeper Gostoc Shop", "collected": false}, {"name": "Perfumer's Shield", "location": "🦴Perfumer Drop", "collected": false}, {"name": "Man-Serpent's Shield", "location": "🦴Man-Serpent Drop", "collected": false}, {"name": "Rickety Shield", "location": "🦴Demihuman Drop", "collected": false}, {"name": "Pillory Shield", "location": "🌱Gaol Cave", "collected": false}, {"name": "Red Thorn Roundshield", "location": "💰Nomadic Merchant Shop (Weeping Peninsula)", "collected": false}, {"name": "Scripture Wooden Shield", "location": "🦴Skeleton Drop", "collected": false}, {"name": "Riveted Wooden Shield", "location": "💰Nomadic Merchant Shop (East Limgrave)", "collected": false}, {"name": "Blue-White Wooden Shield", "location": "🌱Raya Lucaria Academy ", "collected": false}, {"name": "Rift Shield", "location": "💰Nomadic Merchant Shop (South Liurnia)", "collected": false}, {"name": "Iron Roundshield", "location": "💰Nomadic Merchant Shop (West Limgrave)", "collected": false}, {"name": "Gilded Iron Shield", "location": "🌱Church of Pilgrimage", "collected": false}, {"name": "Ice Crest Shield", "location": "🌱Caria Manor", "collected": false}, {"name": "Smoldering Shield", "location": "🌱Prison Town Church", "collected": false}, {"name": "Spiralhorn Shield", "location": "🌱Mausoleum Compound", "collected": false}, {"name": "Coil Shield", "location": "🌱Volcano Cave", "collected": false}, {"name": "Shield of the Guilty", "location": "🌱Demihuman Forest Ruins", "collected": false}, {"name": "MEDIUM SHIELDS", "location": "LOCATION", "collected": true}, {"name": "Kite Shield", "location": "💰Nomadic Merchant Shop (Liurnia South)", "collected": false}, {"name": "Marred Leather Shield", "location": "🌱Stormveil Castle", "collected": false}, {"name": "Marred Wooden Shield", "location": "🌱Stormveil Castle", "collected": false}, {"name": "Banished Knight's Shield", "location": "🦴Banished Knight Drop", "collected": false}, {"name": "Albinauric Shield", "location": "🦴Albinauric (2nd Gen) Drop", "collected": false}, {"name": "Sun Realm Shield", "location": "🦴Skeleton Drop", "collected": false}, {"name": "Silver Mirrorshield", "location": "🌱Apostate Derelict", "collected": false}, {"name": "Round Shield", "location": "💰Nomadic Merchant Shop (Weeping Peninsula)", "collected": false}, {"name": "Scorpion Kite Shield", "location": "💰Nomadic Merchant Shop (Altus Plateau)", "collected": false}, {"name": "Twinbird Kite Shield", "location": "💀Deathbird (Leyndell Royal Capital)", "collected": false}, {"name": "Blue-Gold Kite Shield", "location": "💰Nomadic Merchant Shop (East Limgrave)", "collected": false}, {"name": "Brass Shield", "location": "🦴Soldier Drop", "collected": false}, {"name": "Great Turtle Shell", "location": "🌱Weeping Peninsula", "collected": false}, {"name": "Beastman's Jar-Shield", "location": "🦴Azula Beastman Drop", "collected": false}, {"name": "Carian Knight's Shield", "location": "💀Moongrum, the Carian Knight Drop", "collected": true}, {"name": "Large Leather Shield", "location": "💰Kale Shop (Church of Elleh)", "collected": false}, {"name": "Horse Crest Wooden Shield", "location": "💰Patches Shop", "collected": false}, {"name": "Candletree Wooden Shield", "location": "🌱Sage's Cave", "collected": false}, {"name": "Flame Crest Wooden Shield", "location": "🌱Ailing Village", "collected": false}, {"name": "Hawk Crest Wooden Shield", "location": "🌱Stormveil Castle", "collected": false}, {"name": "Beast Crest Heater Shield", "location": "🌱Limgrave", "collected": false}, {"name": "Red Crest Heater Shield", "location": "💰Nomadic Merchant Shop (Altus Plateau)", "collected": false}, {"name": "Blue Crest Heater Shield", "location": "💰Nomadic Merchant Shop (North Liurnia)", "collected": false}, {"name": "Eclipse Crest Heater Shield", "location": "🌱Tombsward Catacombs", "collected": false}, {"name": "Inverted Hawk Heater Shield", "location": "🌱Siofra River", "collected": false}, {"name": "Heater Shield", "location": "💰Twin Maiden Husk Shop", "collected": false}, {"name": "Black Leather Shield", "location": "💰Pidia Carian Servant Shop ", "collected": false}, {"name": "GREATSHIELDS", "location": "LOCATION", "collected": true}, {"name": "Dragon Towershield", "location": "🌱Crumbling Farum Azula", "collected": false}, {"name": "Distinguished Greatshield", "location": "💰Hermit Merchant Shop", "collected": false}, {"name": "Crucible Hornshield", "location": "🦴Crucible Knight (Siofra Aqueduct)", "collected": false}, {"name": "Dragonclaw Shield", "location": "💀Draconic Tree Sentinel Drop (Leyndel Captial Outskirts)", "collected": false}, {"name": "Briar Greatshield", "location": "💀Elemer of the Briar Drop", "collected": false}, {"name": "Erdtree Greatshield", "location": "💀Tree Sentinel Duo Drop (Leyndell Royal Capital)", "collected": false}, {"name": "Golden Beast Crest Shield", "location": "💀Grafted Scion Drop (Chapel of Anticipation)", "collected": false}, {"name": "Jellyfish Shield", "location": "🌱Foot of the Four Belfries", "collected": false}, {"name": "Fingerprint Stone Shield", "location": "🌱Subterranean Shunning-Grounds", "collected": true}, {"name": "Icon Shield", "location": "🌱Woodfolk Ruins", "collected": false}, {"name": "One-Eyed Shield", "location": "💀Chief Guardian Arghanthy Drop", "collected": false}, {"name": "Visage Shield", "location": "🌱Caelem Ruins", "collected": false}, {"name": "Spiked Palisade Shield", "location": "🌱Deep Siofra Well (Caelid)", "collected": false}, {"name": "Manor Towershield", "location": "🌱Stormveil Castle", "collected": false}, {"name": "Crossed-Tree Towershield", "location": "💰Nomadic Merchant Shop (West Altus Plateau)", "collected": false}, {"name": "Inverted Hawk Towershield", "location": "🦴Fallen Hawks Soldier Drop", "collected": false}, {"name": "Ant's Skull Plate", "location": "🌱Nokstella Eternal City", "collected": false}, {"name": "Redmane Greatshield", "location": "🦴Redmane Knight Drop", "collected": false}, {"name": "Eclipse Crest Greatshield", "location": "🦴Mausoleum Knight Drop", "collected": false}, {"name": "Cuckoo Greatshield", "location": "🦴Cuckoo Knight Drop", "collected": false}, {"name": "Golden Greatshield", "location": "🦴Leyndell Knight Drop", "collected": false}, {"name": "Gilded Greatshield", "location": "🦴Godrick Knight Drop", "collected": false}, {"name": "Haligtree Crest Greatshield", "location": "🦴Haligtree Knight Drop", "collected": false}, {"name": "Wooden Greatshield", "location": "🌱Stormveil Castle", "collected": false}, {"name": "Lordsworn's Shield", "location": "🦴Soldier Drop", "collected": false}], "GREATSWORDS": [{"name": "Bastard Sword", "location": "💰Nomadic Merchant Shop (Weeping Peninsula)", "collected": false}, {"name": "Claymore", "location": "🌱Castle Morne", "collected": false}, {"name": "Iron Greatsword", "location": "🦴Lesser Leonine Misbegotten Drop", "collected": false}, {"name": "Lordsworn's Greatsword", "location": "🌱Gatefront Ruins Wagon", "collected": false}, {"name": "Knight's Greatsword", "location": "🦴Knight Drop", "collected": false}, {"name": "Banished Knight's Greatsword", "location": "🦴Banished Knight Drop", "collected": false}, {"name": "Forked Greatsword", "location": "🦴Elder Imp Drop", "collected": false}, {"name": "Flamberge", "location": "🌱Redmane Castle", "collected": false}, {"name": "Gargoyle's Greatsword", "location": "💀Valiant Gargoyle Duo Drop", "collected": false}, {"name": "Gargoyle's Blackblade", "location": "💀Black Blade Kindred Drop (Caelid)", "collected": false}, {"name": "Inseparable Sword", "location": "📜Prince of Death's Throne (D's Questline)", "collected": false}, {"name": "Sword of Milos", "location": "📜Dung Eater Drop (Dung Eater's Questline)", "collected": false}, {"name": "Marais Executioner's Sword*", "location": "💀Elemer of the Brair Drop", "collected": false}, {"name": "Ordovis's Greatsword", "location": "💀Crucible Knight Ordovis Drop", "collected": false}, {"name": "Alabaster Lord's Sword", "location": "🦴Alabaster Lord Drop", "collected": false}, {"name": "Death's Poker", "location": "💀Death Rite Bird Drop (Caelid)", "collected": false}, {"name": "Helphen's Steeple", "location": "💀Tibia Mariner (Mountaintops)", "collected": false}, {"name": "Blasphemous Blade", "location": "💎Remembrance of the Blasphemous option", "collected": false}, {"name": "Golden Order Greatsword*", "location": "💀Misbegotten Crusader Drop", "collected": false}, {"name": "Dark Moon Greatsword*", "location": "📜Ranni's Questline", "collected": true}, {"name": "Sacred Relic Sword", "location": "💎Elden Remembrance option", "collected": false}], "COLOSSAL SWORDS": [{"name": "Zweihander", "location": "💰Isolated Merchant Shop (Weeping Peninsula)", "collected": false}, {"name": "Greatsword", "location": "🌱Caelid Wagon", "collected": false}, {"name": "Watchdog's Greatsword", "location": "🦴Lesser Erdtree Burial Watchdog Drop (Sword Wielding)", "collected": false}, {"name": "Troll's Golden Sword", "location": "🌱Altus Plateau Wagon", "collected": false}, {"name": "Troll Knight's Sword", "location": "🦴Troll Knight Drop (Caria Manor)", "collected": false}, {"name": "Royal Greatsword", "location": "📜Blaidd Drop (Ranni's Questline)", "collected": false}, {"name": "Grafted Blade Greatsword*", "location": "💀Leonine Misbegotten Drop", "collected": false}, {"name": "Ruins Greatsword*", "location": "💀Crucible Knight Drop (Redmane Castle)", "collected": false}, {"name": "Starscourge Greatsword", "location": "💎Remembrance of the Starscourge option", "collected": false}, {"name": "Godslayer's Greatsword", "location": "🌱Divine Tower of Caelid", "collected": false}, {"name": "Maliketh's Black Blade", "location": "💎Remembrance of the Black Blade option", "collected": false}], "KATANAS": [{"name": "Uchigatana", "location": "🌱Deathtouched Catacombs", "collected": false}, {"name": "Nagakiba", "location": "📜Bloody Finger Hunter Yura Drop (Yura's Questline)", "collected": false}, {"name": "Serpentbone Blade", "location": "📜Second Volcano Manor Assignment Reward", "collected": false}, {"name": "Meteoric Ore Blade", "location": "🌱Caelid Waypoint Ruins", "collected": false}, {"name": "Moonveil", "location": "💀Magma Wyrm Drop (Gael Tunnel)", "collected": false}, {"name": "Rivers of Blood", "location": "💀Bloody Finger Okina Drop", "collected": false}, {"name": "Dragonscale Blade", "location": "💀Dragonkin Soldier Drop (Lake of Rot)", "collected": false}, {"name": "Hand of Malenia", "location": "💎Remembrance of the Rot Goddess option", "collected": false}], "CURVED SWORDS": [{"name": "Scimitar", "location": "💰Twin Maiden Husk Shop", "collected": false}, {"name": "Falchion", "location": "🦴Demihuman Drop (Sword Wielding)", "collected": false}, {"name": "Shamshir", "location": "🌱Highroad Cave", "collected": false}, {"name": "Grossmesser", "location": "🦴Skeleton Drop (Sword Wielding)", "collected": false}, {"name": "Bandit's Curved Sword", "location": "🦴Skeleton Assassin Drop ", "collected": false}, {"name": "Shotel", "location": "💰Nomadic Merchant Shop (Siofra River)", "collected": false}, {"name": "Scavenger's Curved Sword", "location": "🌱Mt. Gelmir", "collected": false}, {"name": "Mantis Blade", "location": "💀Cemetary Shade Drop (Gelmir Hero's Grave)", "collected": false}, {"name": "Beastman's Curved Sword", "location": "🦴Azula Beastman Drop", "collected": false}, {"name": "Flowing Curved Sword", "location": "🌱Consecrated Snowfield Wagon", "collected": false}, {"name": "Serpent-God's Curved Sword", "location": "🌱Ruin-Strewn Precipice", "collected": false}, {"name": "Magma Blade", "location": "🦴Man-Serpent Drop (Sword Wielding)", "collected": false}, {"name": "Nox Flowing Sword", "location": "💀Nox Swordstress & Nox Priest Drop", "collected": false}, {"name": "Wing of Astel", "location": "🌱Uhl Palace Ruins", "collected": true}, {"name": "Eclipse Shotel*", "location": "🌱Castle Sol", "collected": false}], "CURVED GREATSWORDS": [{"name": "Dismounter", "location": "🦴Kaiden Sellsword Drop", "collected": false}, {"name": "Omen Cleaver", "location": "🦴Omen Drop", "collected": false}, {"name": "Monk's Flameblade", "location": "🦴Firemonk Drop", "collected": false}, {"name": "Beastman's Cleaver", "location": "🦴Azula Beastman Drop", "collected": false}, {"name": "Bloodhound's Fang", "location": "💀Bloodhound Knight Darriwil Drop", "collected": false}, {"name": "Onyx Lord's Greatsword", "location": "💀Onyx Lord Drop", "collected": false}, {"name": "Zamor Cuved Sword", "location": "💀Ancient Hero of Zamor (Giant Conquering Hero's Grave)", "collected": false}, {"name": "Magma Wyrm's Scalesword", "location": "💀Magma Wyrm Makar Drop", "collected": false}, {"name": "Morgott's Cursed Sword", "location": "💎Remembrance of the Omen King option", "collected": false}], "THRUSTING SWORDS": [{"name": "Rapier", "location": "💰Twin Maiden Husk Shop", "collected": false}, {"name": "Estoc", "location": "💰Nomadic Merchant Shop (South Liurnia), 💰Patches Shop (Liurnia)", "collected": false}, {"name": "Noble's Estoc", "location": "🦴Wandering Noble (Thrusting Sword Wielding)", "collected": false}, {"name": "Cleanrot Knight's Sword", "location": "🦴Cleanrot Knight Drop", "collected": false}, {"name": "Rogier's Rapier", "location": "📜Rogier's Questline", "collected": true}, {"name": "Antspur Rapier", "location": "💀Maleigh Marais, Shaded Castle Castellan Drop", "collected": true}, {"name": "Frozen Needle", "location": "🌱Kingsrealm Ruins", "collected": false}], "HEAVY THRUSTING SWORDS": [{"name": "Great Epee", "location": "🌱South Limgrave", "collected": false}, {"name": "Godskin Stitcher", "location": "💀Godskin Noble (Volcano Manor)", "collected": false}, {"name": "Bloody Helice", "location": "🌱Writheblood Ruins", "collected": false}, {"name": "Dragon King's Cragblade", "location": "💎Remembrance of the Dragonlord option", "collected": false}], "AXES": [{"name": "Hand Axe", "location": "💰Nomadic Merchant Shop (East Limgrave)", "collected": false}, {"name": "Forked Hatchet", "location": "🦴Imp Drop", "collected": false}, {"name": "Battle Axe", "location": "💰Twin Maiden Husk Shop", "collected": false}, {"name": "Warped Axe", "location": "🦴Fell Omen Drop", "collected": false}, {"name": "Jawbone Axe", "location": "🦴Ancestral Follower Drop", "collected": false}, {"name": "Iron Cleaver", "location": "🦴Misbegotten Drop", "collected": false}, {"name": "Highland Axe", "location": "🌱Stormveil Castle", "collected": false}, {"name": "Celebrant's Cleaver", "location": "🦴Celebrant Drop", "collected": false}, {"name": "Sacrificial Axe", "location": "💀Deathbird Drop (Weeping Peninsula)", "collected": false}, {"name": "Icerind Hatchet", "location": "🌱Temple Quarter (Liurnia)", "collected": true}, {"name": "Ripple Blade", "location": "💰Pidia Carian Servant Shop", "collected": false}, {"name": "Stormhawk Axe", "location": "🌱Leyndell Royal Capital, 🌱Castle Sol, 🦴Nepheli Loux Drop", "collected": false}, {"name": "Rosus' Axe", "location": "🌱Black Knife Catacombs", "collected": false}], "GREATAXES": [{"name": "Greataxe", "location": "🌱Limgrave Wagon", "collected": false}, {"name": "Cresent Moon Axe", "location": "🦴Exile Drop (Axe Wielding)", "collected": false}, {"name": "Longhaft Axe", "location": "🦴Misbegotten Warrior Drop", "collected": false}, {"name": "Executioner's Greataxe", "location": "🦴Skeleton Warrior Drop", "collected": false}, {"name": "Great Omenkiller Cleaver", "location": "🦴Omenkiller Drop (Volcano Manor), 💀Omenkiller Drop (Perfumer's Grotto)", "collected": false}, {"name": "Rusted Anchor", "location": "💀Scaly Misbegotten Drop", "collected": false}, {"name": "Butchering Knife", "location": "💀Anastasia, Tarnished-Eater Drop", "collected": false}, {"name": "Gargoyle's Great Axe", "location": "🦴Valiant Gargoyle Drop (Leyndell Capital Outskirts)", "collected": false}, {"name": "Gargoyle's Black Axe", "location": "💀Black Blade Kindred (Mountaintops)", "collected": false}, {"name": "Winged Greathorn", "location": "💎Remembrance of the Regal Ancestor option", "collected": false}, {"name": "Axe of Godrick", "location": "💎Remembrance of the Grafted option", "collected": false}], "TORCHES": [{"name": "Torch", "location": "💰Kale Shop (Church of Elleh)", "collected": false}, {"name": "Beast-Repellent Torch", "location": "💰Isolated Merchant Shop (Dragonsbarrow)", "collected": false}, {"name": "Steel-Wire Torch", "location": "🌱Castle Morne", "collected": false}, {"name": "Sentry's Torch", "location": "💰Hermit Merchant Shop (Leyndell Royal Capital)", "collected": false}, {"name": "Ghostflame Torch", "location": "🌱Nokron, Eternal City", "collected": false}, {"name": "St. Trina's Torch", "location": "🌱Consecrated Snowfields Wagon", "collected": false}], "HAMMERS": [{"name": "Club", "location": "💰Nomadic Merchant Shop (West Limgrave), 🦴Demihuman Drop", "collected": true}, {"name": "Curved Club", "location": "🦴Albinauric (2nd Gen) Drop", "collected": false}, {"name": "Spiked Club", "location": "🦴Demihuman Drop", "collected": false}, {"name": "Stone Club", "location": "🦴Battlemage Drop", "collected": false}, {"name": "Mace", "location": "💰Twin Maiden Husk Shop", "collected": false}, {"name": "Morning Star", "location": "🌱Weeping Peninsula", "collected": false}, {"name": "Warpick", "location": "🦴Soldier Drop", "collected": false}, {"name": "Hammer", "location": "🌱Leyndell Royal Capital", "collected": false}, {"name": "Monk's Flamemace", "location": "🦴Firemonk Drop", "collected": false}, {"name": "Varre's Bouquet", "location": "📜White-Faced Varre Questline", "collected": false}, {"name": "Envoy's Horn", "location": "🦴Oracle Envoy Drop", "collected": false}, {"name": "Nox Flowing Hammer", "location": "🌱Nokron Eternal City", "collected": false}, {"name": "Ringed Finger", "location": "🌱Gelmir Hero's Grave", "collected": false}, {"name": "Scepter of the All-Knowing", "location": "💀Sir Gideon Ofnir the All-Knowing Drop", "collected": false}, {"name": "Marika's Hammer", "location": "💎Elden Remembrance option", "collected": false}], "GREAT HAMMERS": [{"name": "Large Club", "location": "🌱South Limgrave", "collected": false}, {"name": "Curved Great Club", "location": "🦴Albinauric (2nd Gen) Drop", "collected": false}, {"name": "Great Mace", "location": "🌱South Altus Plateau", "collected": false}, {"name": "Pickaxe", "location": "🦴Miner Drop", "collected": false}, {"name": "Brick Hammer", "location": "🌱Stormveil Castle", "collected": false}, {"name": "Battle Hammer", "location": "🦴Lesser Grave Warden Duelist Drop", "collected": false}, {"name": "Rotten Battle Hammer", "location": "🦴Rotten Duelist Drop (Consecrated Snowfields)", "collected": false}, {"name": "Celebrant's Skull", "location": "🌱Windmill Village", "collected": false}, {"name": "Great Stars", "location": "🌱Altus Plateau Wagon", "collected": false}, {"name": "Greathorn Hammer", "location": "🦴Ancestral Follower Drop", "collected": false}, {"name": "Envoy's Long Horn", "location": "🦴Large Oracle Envoy Drop", "collected": false}, {"name": "Cranial Vessel Candlestand", "location": "🌱Giant Conquering Hero's Grave", "collected": false}, {"name": "Beastclaw Greathammer", "location": "📜7th Deathroot Reward (Gurranq, Beast Clergyman)", "collected": false}, {"name": "Devourer's Scepter*", "location": "🦴Knight Bernahl Drop, or 💀Recusant Bernahl Drop", "collected": false}], "COLOSSAL WEAPONS": [{"name": "Duelist Greataxe", "location": "🦴Lesser Grave Warden Duelist Drop", "collected": false}, {"name": "Rotten Greataxe", "location": "🦴Rotten Duelist Drop (Consecrated Snowfields)", "collected": false}, {"name": "Golem's Halberd", "location": "🦴Golem Drop", "collected": false}, {"name": "Giant-Crusher", "location": "🌱Leyndell Capital Outskirts", "collected": false}, {"name": "Prelate's Inferno Crozier", "location": "🦴Fire Prelate Drop", "collected": false}, {"name": "Great Club", "location": "💀Stonedigger Troll Drop", "collected": false}, {"name": "Troll's Hammer", "location": "🌱Old Altus Tunnel", "collected": false}, {"name": "Dragon Greatclaw", "location": "💀Draconic Tree Sentinel Drop (Leyndell)", "collected": false}, {"name": "Watchdog's Staff", "location": "🌱Road's End Catacombs", "collected": false}, {"name": "Staff of the Avatar", "location": "🦴Erdtree Avatar Drop (Deeproot Depths)", "collected": false}, {"name": "Rotten Staff", "location": "🦴Putrid Avatar Drop (Miquella's Haligtree)", "collected": false}, {"name": "Envoy's Greathorn", "location": "🦴Giant Oracle Envoy Drop", "collected": false}, {"name": "Ghiza's Wheel", "location": "💀Inquisitor Ghiza Drop", "collected": false}, {"name": "Fallingstar Beast Jaw", "location": "💀Full-Grown Fallingstar Beast Drop", "collected": true}, {"name": "Axe of Godfrey", "location": "💎Remembrance of the Grafted option", "collected": false}], "SPEARS": [{"name": "Short Spear", "location": "💰Twin Maiden Husk Shop", "collected": false}, {"name": "Iron Spear", "location": "🦴Fallen Hawks Soldier Drop", "collected": false}, {"name": "Spear", "location": "🦴Exile Drop", "collected": false}, {"name": "Partisan", "location": "🦴Knight Drop", "collected": false}, {"name": "Pike", "location": "🌱Stormveil Castle", "collected": false}, {"name": "Spiked Spear", "location": "🦴Marionette Soldier Drop", "collected": false}, {"name": "Cross-Naginata", "location": "🌱Gael Tunnel", "collected": false}, {"name": "Clayman's Harpoon", "location": "🦴Clayman Drop", "collected": false}, {"name": "Celebrant's Rib-Rake", "location": "🦴Celebrant Drop", "collected": false}, {"name": "Torchpole", "location": "🦴Foot Soldier Drop", "collected": false}, {"name": "Inquisitor's Girandole", "location": "💀Abductor Virgins Drop", "collected": false}, {"name": "Crystal Spear", "location": "🌱Sellia Hideaway", "collected": false}, {"name": "Rotten Crystal Spear", "location": "🦴Putrid Crystalian Drop", "collected": false}, {"name": "Cleanrot Spear", "location": "🦴Cleanrot Knight Drop", "collected": false}, {"name": "Death Ritual Spear", "location": "💀Death Rite Bird Drop (Mountaintops)", "collected": false}, {"name": "Bolt of Gransax*", "location": "🌱Leyndell Royal Capital", "collected": false}], "GREAT SPEARS": [{"name": "Lance", "location": "🌱North Limgrave", "collected": false}, {"name": "Treespear", "location": "🌱South Liurnia of the Lakes Wagon ", "collected": false}, {"name": "Serpent-Hunter", "location": "🌱Volcano Manor", "collected": false}, {"name": "Siluria's Tree", "location": "💀Crucible Knight Siluria Drop", "collected": false}, {"name": "Vyke's War Spear", "location": "💀Festering Fingerprint Vyke", "collected": false}, {"name": "Mohgwyn's Sacred Spear", "location": "💎Remembrance of the Blood Lord option", "collected": false}], "HALBERDS": [{"name": "Halberd", "location": "💰Nomadic Merchant Shop (North Limgrave)", "collected": false}, {"name": "Banished Knight's Halberd", "location": "🦴Banished Knight Drop", "collected": false}, {"name": "Lucerne", "location": "🌱Liurnia Highway", "collected": false}, {"name": "Glaive", "location": "🦴Skeleton Drop", "collected": false}, {"name": "Vulgar Militia Shotel", "location": "🦴Vulgar Militia Drop", "collected": false}, {"name": "Vulgar Militia Saw", "location": "🦴Vulgar Militia Drop", "collected": false}, {"name": "Gaurdian's Swordspear", "location": "🦴Erdtree Guardian Drop", "collected": false}, {"name": "Gargoyle's Halberd", "location": "🦴Valiant Gargoyle Drop (Leyndell Royal Capital)", "collected": false}, {"name": "Gargoyle's Black Halberd", "location": "💀Black Blade Kindred Drop (Caelid)", "collected": false}, {"name": "Nightrider Glaive", "location": "💀Night's Cavalry Drop (North Liurnia of the Lakes)", "collected": false}, {"name": "Pest's Glaive", "location": "🦴Lesser Kindred of Rot Drop", "collected": false}, {"name": "Ripple Crescent Halberd", "location": "🦴Albinauric (2nd Gen) Drop", "collected": false}, {"name": "Golden Halberd", "location": "💀Tree Sentinel Drop (Limgrave)", "collected": false}, {"name": "Dragon Halberd", "location": "💀Dragonkin Soldier Drop (Siofra River)", "collected": false}, {"name": "Loretta's War Sickle", "location": "💀Loretta, Knight of the Haligtree Drop", "collected": false}, {"name": "Commander's Standard", "location": "💀Commander O'Neil Drop", "collected": false}, {"name": "REAPERS", "location": "LOCATION", "collected": true}, {"name": "Scythe", "location": "🌱Cliffbottom Catacombs", "collected": false}, {"name": "Grave Scythe", "location": "🦴Skeleton Mage Drop", "collected": false}, {"name": "Halo Scythe", "location": "🦴Cleanrot Knight Drop", "collected": false}, {"name": "Winged Scythe", "location": "🌱Tombsward Ruins", "collected": false}], "TWINBLADES": [{"name": "Twinblade", "location": "🌱Dragon Burnt Ruins", "collected": false}, {"name": "Twinned Knight Swords", "location": "🌱East Windmill Pasture", "collected": false}, {"name": "Godskin Peeler", "location": "💀Godskin Apostle Drop (Windmill Village)", "collected": false}, {"name": "Gargoyle's Twinblade", "location": "💀Valiant Gargoyle Duo Drop ", "collected": false}, {"name": "Gargoyle's Black Blades", "location": "💀Black Blade Kindred Drop (Mountaintops)", "collected": false}, {"name": "Eleonora's Poleblade", "location": "💀Eleonora, Violet Bloody Finger Drop", "collected": false}], "FLAILS": [{"name": "Flail", "location": "🌱Gatefront Ruins Wagon", "collected": false}, {"name": "Nightrider Flail", "location": "💀Night's Cavalry Drop (Weeping Peninsula)", "collected": false}, {"name": "Chainlink Flail", "location": "🦴Pumpkin Head Drop", "collected": false}, {"name": "Family Heads", "location": "💀Necromancer Garris Drop", "collected": false}, {"name": "Bastard's Stars", "location": "💎Remembrance of the Naturalborn option", "collected": false}], "FISTS": [{"name": "Caestus", "location": "💰Gatekeeper Gostoc Shop", "collected": false}, {"name": "Spiked Caestus", "location": "💰Isolated Merchant Shop (Dragonsbarrow)", "collected": false}, {"name": "Katar", "location": "🌱Fort Gael", "collected": false}, {"name": "Iron Ball", "location": "🦴Blackguard Big Boggart Drop", "collected": false}, {"name": "Star Fist", "location": "🌱Leyndell Royal Capital", "collected": false}, {"name": "ClingingBone", "location": "💀Ensha of the Royal Remains Drop", "collected": false}, {"name": "Veteran's Prosthesis", "location": "💀Commander Niall Drop", "collected": false}, {"name": "Cipher Pata", "location": "🌱Roundtable Hold", "collected": false}, {"name": "Grafted Dragon", "location": "💎Remembrance of the Grafted option", "collected": false}], "CLAWS": [{"name": "Hookclaws", "location": "🌱Stormveil Castle", "collected": false}, {"name": "Bloodhound Claws", "location": "🦴Bloodhound Knight Drop (Volcano Manor)", "collected": false}, {"name": "Venomous Fang", "location": "🌱Abandoned Cave", "collected": false}, {"name": "Raptor Talons", "location": "🌱Sage's Cave", "collected": false}], "WHIPS": [{"name": "Whip", "location": "🌱Castle Morne", "collected": false}, {"name": "Thorned Whip", "location": "🦴Fire Prelate Drop", "collected": false}, {"name": "Urumi", "location": "🌱Caria Manor", "collected": false}, {"name": "Hoslow's Petal Whip", "location": "💀Juno Hoslow Drop, 🦴Daillos Drop", "collected": false}, {"name": "Magma Whip Candlestick", "location": "📜Patches Questline", "collected": false}, {"name": "Giant's Red Braid", "location": "💎Remembrance of the Fire Giant option", "collected": false}]}, "sorceries": [{"name": "Brairs of Punishment", "location": "🌱South Mountaintops", "collected": false}, {"name": "Brairs of Sin", "location": "🌱East Liurnia", "collected": false}, {"name": "Carian Greatsword", "location": "💰Miriel, Pastor of Vows Shop", "collected": false}, {"name": "Carian Phalanx", "location": "💰Preceptor Seluvis Shop", "collected": false}, {"name": "Carian Piercer", "location": "🦴Scarab Reward (Caria Manor)", "collected": false}, {"name": "Carian Retaliation", "location": "💰Preceptor Seluvis Shop", "collected": false}, {"name": "Carian Slicer", "location": "💰Royal House Scroll Unlock (Sorceress Sellen or Miriel)", "collected": true}, {"name": "Glintblade Phalanx", "location": "💰Royal House Scroll Unlock (Sorceress Sellen or Miriel)", "collected": false}, {"name": "Greatblade Phalanx", "location": "💀Bols, Carian Knight Drop", "collected": true}, {"name": "Lucidity", "location": "💀Preceptor Miriam (Inverted) Drop", "collected": false}, {"name": "Magic Downpour", "location": "💀Preceptor Miriam Drop", "collected": false}, {"name": "Magic Glintblade", "location": "💰Miriel, Pastor of Vows Shop", "collected": false}, {"name": "Great Oracular Bubble", "location": "🦴Scarab Reward (Siofra River)", "collected": false}, {"name": "Oracle Bubbles", "location": "🦴Scarab Reward (Siofra River)", "collected": false}, {"name": "Crystal Release", "location": "💀Crystalians Drop (Academy Crystal Cave)", "collected": false}, {"name": "Crystal Torrent", "location": "💀Putrid Crystalians Drop (Sellia Hideaway)", "collected": true}, {"name": "Shattering Crystal", "location": "🌱Raya Lucaria Academy", "collected": false}, {"name": "Ancient Death Rancor", "location": "💀Death Rite Bird Drop (Liurnia of the Lakes)", "collected": false}, {"name": "Explosive Ghostflame", "location": "💀Death Rite Bird Drop (Consecrated Snowfields)", "collected": false}, {"name": "Fia's Mist", "location": "💀Fia's Champions Drop", "collected": true}, {"name": "Rancorcall", "location": "🦴Scarab Reward (Stormveil Castle Underground)", "collected": false}, {"name": "Tibia's Summons", "location": "💀Tibia Mariner Drop (Altus Plateau)", "collected": false}, {"name": "Ranni's Dark Moon*", "location": "🌱Chelona's Rise", "collected": true}, {"name": "Rennala's Full Moon", "location": "💎Remembrance of the Full Moon Queen option", "collected": false}, {"name": "Cannon of Haima", "location": "🌱Converted Fringe Tower", "collected": false}, {"name": "Comet", "location": "🌱Raya Lucaria Academy", "collected": false}, {"name": "Crystal Barrage", "location": "💰Sorceress Sellen Shop", "collected": false}, {"name": "Crystal Burst", "location": "🦴Demihuman Queen Drop (Weeping Peninsula)", "collected": false}, {"name": "Gavel of Haima", "location": "🌱Converted Fringe Tower", "collected": false}, {"name": "Glintstone Arc", "location": "🦴Scarab Reward (Agheel Lake), 💰Sorceress Sellen Shop", "collected": true}, {"name": "Glintstone Cometshard", "location": "💰Conspectus Scroll Unlock (Sorceress Sellen or Miriel)", "collected": false}, {"name": "Glintstone Pebble", "location": "💰Sorceress Sellen Shop", "collected": true}, {"name": "Glintstone Stars", "location": "💰Sorceress Sellen Shop", "collected": false}, {"name": "Great Glintstone Shard", "location": "💰Academy Scroll Unlock (Sorceress Sellen or Miriel)", "collected": true}, {"name": "Rock Blaster", "location": "🌱Sellia Crystal Tunnel", "collected": false}, {"name": "Scholar's Armament", "location": "💰Sorceress Sellen Shop", "collected": false}, {"name": "Scholar's Shield", "location": "💰Sorceress Sellen Shop", "collected": false}, {"name": "Shard Spiral", "location": "💰Sorceress Sellen Shop (Questline Progress as Ally)", "collected": false}, {"name": "Shatter Earth", "location": "🌱Raya Lucaria Crystal Tunnel", "collected": false}, {"name": "Star Shower", "location": "💰Conspectus Scroll Unlock (Sorceress Sellen or Miriel)", "collected": false}, {"name": "Starlight", "location": "💰Thops Shop", "collected": false}, {"name": "Swift Glintstone Shard", "location": "💰Academy Scroll Unlock (Sorceress Sellen or Miriel)", "collected": true}, {"name": "Terra Magica", "location": "🌱Academy Crystal Cave", "collected": false}, {"name": "Thop's Barrier", "location": "📜Thops Questline Progress", "collected": false}, {"name": "Collapsing Stars", "location": "🌱War-Dead Catacombs", "collected": false}, {"name": "Gravity Well", "location": "🌱Raya Lucaria Academy", "collected": false}, {"name": "Meteorite", "location": "💀Alabaster Lord Drop", "collected": true}, {"name": "Meteorite of Astel", "location": "💀Astel, Stars of Darkness Drop", "collected": false}, {"name": "Rock Sling", "location": "🌱Street of Sages Ruins", "collected": true}, {"name": "Loretta's Greatbow", "location": "💀Royal Knight Loretta Drop", "collected": true}, {"name": "Loretta's Mastery", "location": "💀Loretta, Knight of the Haligtree Drop", "collected": false}, {"name": "Gelmir's Fury", "location": "📜Recusant Bernahl Reward (Volcano Manor Contract)", "collected": false}, {"name": "Magma Shot", "location": "📜Volcano Manor 1st Contract Reward", "collected": true}, {"name": "Roiling Magma", "location": "🌱Hermit's Shack (Mt. Gelmir)", "collected": false}, {"name": "Rykard's Rancor", "location": "💎Remembrance of the Blasphemous option", "collected": false}, {"name": "Ambush Shard", "location": "🌱Witchbane Ruins", "collected": true}, {"name": "Eternal Darkness", "location": "🌱Tower in Caelid (near Church of the Plague)", "collected": true}, {"name": "Night Comet", "location": "🌱Sellia, Town of Sorcery", "collected": true}, {"name": "Night Maiden's Mist", "location": "💰Gowry Shop", "collected": true}, {"name": "Night Shard", "location": "💰Gowry Shop", "collected": true}, {"name": "Unseen Blade", "location": "🌱Mirage Rise", "collected": false}, {"name": "Unseen Form", "location": "🌱Mirage Rise", "collected": false}, {"name": "Comet Azur*", "location": "📜Primeval Sorcerer Azur", "collected": true}, {"name": "Founding Rain of Stars*", "location": "🌱Heretical Rise", "collected": false}, {"name": "Stars of Ruin*", "location": "📜Primeval Sorcerer Lusat", "collected": false}, {"name": "Adula's Moonblade", "location": "💀Glintstone Dragon Adula Drop", "collected": false}, {"name": "Freezing Mist", "location": "💰Preceptor Seluvis Shop", "collected": false}, {"name": "Frozen Armament", "location": "🦴Scarab Reward (Caria Manor)", "collected": true}, {"name": "Glintstone Icecrag", "location": "💰Preceptor Seluvis Shop", "collected": true}, {"name": "Zamor Ice Storm", "location": "🌱Zamor Ruins", "collected": true}], "incantations": [{"name": "Golden Order Principia", "location": "🌱Erdtree Sanctuary (Leyndell Royal Capital)", "collected": false}, {"name": "Beast Claw", "location": "📜5th Deathroot Reward (Gurranq, Beast Clergyman)", "collected": false}, {"name": "Bestial Constitution", "location": "🦴Scarab Reward (Bestial Sanctum)", "collected": false}, {"name": "Bestial Sling", "location": "📜2nd Deathroot Reward (Gurranq, Beast Clergyman)", "collected": false}, {"name": "Bestial Vitality", "location": "📜3rd Deathroot Reward (Gurranq, Beast Clergyman)", "collected": false}, {"name": "Gurranq's Beast Claw", "location": "📜8th Deathroot Reward (Gurranq, Beast Clergyman)", "collected": false}, {"name": "Stone of Gurranq", "location": "📜6th Deathroot Reward (Gurranq, Beast Clergyman)", "collected": false}, {"name": "Bloodboon", "location": "💎Remembrance of the Blood Lord option", "collected": false}, {"name": "Bloodflame Blade", "location": "🦴Scarab Reward (Rose Church, Liurnia)", "collected": false}, {"name": "Bloodflame Talons", "location": "💀Mohg, the Omen Drop", "collected": false}, {"name": "Swarm of Flies", "location": "🌱Mohgwyn Palace", "collected": false}, {"name": "Agheel's Flame", "location": "💰Dragon Altar, Flying Dragon Agheel Slain", "collected": false}, {"name": "Borealis's Mist", "location": "💰Dragon Altar, Borealis the Freezing Fog Slain", "collected": false}, {"name": "Dragonclaw", "location": "💰Dragon Altar", "collected": false}, {"name": "Dragonfire", "location": "💰Dragon Altar", "collected": false}, {"name": "Dragonice", "location": "💰Dragon Altar", "collected": false}, {"name": "Dragonmaw", "location": "💰Dragon Altar", "collected": false}, {"name": "Ekzyke's Decay", "location": "💰Dragon Altar, Decaying Ekzykes Slain", "collected": false}, {"name": "Glintstone Breath", "location": "💰Dragon Altar", "collected": false}, {"name": "Greyoll's Roar*", "location": "💰Dragon Altar, Elder Dragon Greyoll Slain", "collected": false}, {"name": "Magma Breath", "location": "💰Dragon Altar, Magma Wyrm Slain (Lava Pool, Mt. Gelmir)", "collected": false}, {"name": "Placidusax's Ruin", "location": "💎Remembrance of the Dragonlord option", "collected": false}, {"name": "Rotten Breath", "location": "💰Dragon Altar", "collected": false}, {"name": "Smarag's Glintstone Breath", "location": "💰Dragon Altar, Glintstone Dragon Smarag Slain", "collected": false}, {"name": "Theodorix's Magma", "location": "💰Dragon Altar, Great Wyrm Theodorix Slain", "collected": false}, {"name": "Ancient Dragons' Lightning Spear", "location": "💰Ancient Dragon Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Ancient Dragons' Lightning Strike", "location": "💰Ancient Dragon Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Death Lightning", "location": "💎Remembrance of the Lichdragon option", "collected": false}, {"name": "Dragonbolt Blessing", "location": "🌱Stormcaller's Church", "collected": false}, {"name": "Electrify Armament", "location": "💰Dragon Cult Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Fortissax's Lightning Spear", "location": "💎Remembrance of the Lichdragon option", "collected": false}, {"name": "Frozen Lightning Spear", "location": "💀Dragonkin Soldier of Nokstella Drop", "collected": false}, {"name": "Honed Bolt", "location": "💰Dragon Cult Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Lansseax's Glaive", "location": "💀Ancient Dragon Lansseax Drop", "collected": false}, {"name": "Lightning Spear", "location": "💰Dragon Cult Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Lightning Strike", "location": "🦴Scarab Reward (Weeping Peninsula)", "collected": false}, {"name": "Vyke's Dragonbolt", "location": "💀Vyke, Knight of the Roundtable Drop", "collected": false}, {"name": "Aspects of the Crucible: Breath", "location": "🦴Crucible Knight Drop (Volcano Manor)", "collected": false}, {"name": "Aspects of the Crucible: Horns", "location": "🦴Crucible Knight Drop (Stormveil Castle)", "collected": false}, {"name": "Aspects of the Crucible: Tail", "location": "💀Crucible Knight Drop (Stormhill Evergaol)", "collected": false}, {"name": "Barrier of Gold", "location": "🦴Scarab Reward (Leyndell, Erdtree Sanctuary)", "collected": false}, {"name": "Black Blade", "location": "💎Remembrance of the Black Blade option", "collected": false}, {"name": "Blessing of the Erdtree", "location": "🌱Queen's Bedchambers (Leyndell Royal Capital)", "collected": false}, {"name": "Blessing's Boon", "location": "💰Miriel, Pastor of Vows Shop", "collected": false}, {"name": "Elden Stars*", "location": "🌱Deeproot Depths", "collected": false}, {"name": "Erdtree Heal", "location": "🌱Queen's Bedchambers (Leyndell Capital of Ash)", "collected": false}, {"name": "Golden Lightning Fortification", "location": "🦴Scarab Reward (Crumbling Farum Azula)", "collected": false}, {"name": "Golden Vow", "location": "🌱Corpse Stench Shack (Mt. Gelmir)", "collected": false}, {"name": "Protection of the Erdtree", "location": "🦴Scarab Reward (Altus Plateau)", "collected": false}, {"name": "Wrath of Gold", "location": "🌱Woodfolk Ruins", "collected": false}, {"name": "Burn, O Flame!", "location": "💎Remembrance of the Fire Giant option", "collected": false}, {"name": "Flame of the Fell God*", "location": "💀Adan, Thief of Fire Drop", "collected": false}, {"name": "Flame, Fall Upon Them", "location": "💰Giant's Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Giantsflame Take Thee", "location": "💰Giant's Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Catch Flame", "location": "💰Brother Corhyn Shop", "collected": false}, {"name": "Fire's Deadly Sin", "location": "📜Flightless Bird Painting Reward", "collected": false}, {"name": "Flame, Cleanse Me", "location": "🌱Fire Monk Camp", "collected": false}, {"name": "Flame, Grant Me Strength", "location": "🌱Fort Gael (Caelid)", "collected": false}, {"name": "Flame, Protect Me", "location": "🌱Giant Conquering Hero's Grave (Mountaintops)", "collected": false}, {"name": "Flame Sling", "location": "💰Brother Corhyn Shop", "collected": false}, {"name": "O, Flame!", "location": "💰Fire Monks Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Surge, O Flame!", "location": "💰Fire Monks Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Whirl, O Flame!", "location": "🦴Scarab Reward (West Caelid)", "collected": false}, {"name": "Frenzied Burst", "location": "🦴Scarab Reward (Liurnia of the Lakes)", "collected": false}, {"name": "Howl of Shabriri", "location": "🌱Frenzy-Flaming Tower", "collected": false}, {"name": "Inescapable Frenzy", "location": "🌱Cathedral of the Forsaken", "collected": false}, {"name": "The Flame of Frenzy", "location": "🌱Callu Baptismal Church", "collected": false}, {"name": "Unendurable Frenzy", "location": "🌱Yelough Anix Ruins", "collected": false}, {"name": "Black Flame", "location": "💰Godskin Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Black Flame Blade", "location": "💰Godskin Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Black Flame Ritual", "location": "💀Godskin Apostle & Godskin Noble Drop (Spiritcaller's Cave)", "collected": false}, {"name": "Black Flame's Protection", "location": "📜Gideon Ofnir Reward (Secret Medallion Dialogue)", "collected": false}, {"name": "Noble Presence", "location": "💀Godskin Noble Drop (Volcano Manor)", "collected": false}, {"name": "Scouring Black Flame", "location": "💀Godskin Apostle Drop", "collected": false}, {"name": "Discus of Light", "location": "💰Brother Corhyn Shop (Quest Progress)", "collected": false}, {"name": "Immutable Shield", "location": "💰Brother Corhyn Shop (Quest Progress)", "collected": false}, {"name": "Law of Causality", "location": "📜Gideon Ofnir Reward (Cocoon Dialogue)", "collected": false}, {"name": "Law of Regression", "location": "💰Golden Order Principia Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Litany of Proper Death", "location": "💰D, Hunter of the Dead Shop", "collected": false}, {"name": "Order Healing", "location": "🦴Scarab Reward (Siofra Aqueduct) ", "collected": false}, {"name": "Order's Blade", "location": "💰D, Hunter of the Dead Shop", "collected": false}, {"name": "Radagon's Rings of Light", "location": "💰Golden Order Principia Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Triple Rings of Light", "location": "🌱Elphael, Brace of The Haligtree", "collected": false}, {"name": "Pest Threads", "location": "💰Gowry Shop", "collected": false}, {"name": "Poison Armament", "location": "🦴Scarab Reward (Swamp of Aeonia)", "collected": false}, {"name": "Poison Mist", "location": "🦴Scarab Reward (Castle Morne, Weeping Peninsula)", "collected": false}, {"name": "Scarlet Aeonia", "location": "💎Remembrance of the Rot Goddess option", "collected": false}, {"name": "Assassin's Approach", "location": "💰Assassin's Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Darkness", "location": "💰Assassin's Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Divine Fortification", "location": "🦴Scarab Reward (Tombsward Ruins)", "collected": false}, {"name": "Flame Fortification", "location": "💰Brother Corhyn Shop", "collected": false}, {"name": "Great Heal", "location": "💰Brother Corhyn Shop (Quest Progress)", "collected": false}, {"name": "Heal", "location": "💰Brother Corhyn", "collected": false}, {"name": "Lightning Fortification", "location": "💰Brother Corhyn (Quest Progress)", "collected": false}, {"name": "Lord's Aid", "location": "💰Two Fingers Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Lord's Divine Fortification", "location": "📜Gideon Ofnir Reward (Haligtree Dialogue)", "collected": false}, {"name": "Lord's Heal", "location": "💰Two Fingers Prayerbook Unlock (Brother Corhyn or Miriel)", "collected": false}, {"name": "Magic Fortification", "location": "💰Brother Corhyn Shop", "collected": false}, {"name": "Rejection", "location": "💰Brother Corhyn", "collected": false}, {"name": "Shadow Bait", "location": "🌱Subterranean Shunning Grounds", "collected": false}, {"name": "Urgent Heal", "location": "💰Brother Corhyn Shop", "collected": false}, {"name": "Cure Poison", "location": "💰Brother Corhyn Shop", "collected": false}], "ashes_of_war": [], "spirit_ashes": [{"name": "Wandering Noble", "location": "🌱Stormfoot Catacombs", "collected": true}, {"name": "Stormhawk Deenh", "location": "🌱Chapel of Anticipation", "collected": true}, {"name": "Noble Sorcerer", "location": "💀Erdtree Burial Watchdog Drop (Stormfoot Catacombs)", "collected": true}, {"name": "Banished Knight Oleg", "location": "💀Ulcerated Tree Spirit Drop (Fringefolk Hero's Grave)", "collected": true}, {"name": "Nomad", "location": "🌱Cathedral of the Forsaken", "collected": true}, {"name": "Banished Knight Engvall", "location": "🌱Murkwater Catacombs", "collected": true}, {"name": "Putrid Corpses", "location": "💀Frenzied Duelist Drop (Gaol Cave)", "collected": true}, {"name": "Bloodhound Knight Floh", "location": "🌱Gelmir Hero's Grave", "collected": true}, {"name": "Skeletal Militiaman", "location": "💀Tibia Mariner Drop (Limgrave)", "collected": true}, {"name": "Battlemage Hugues", "location": "💀Battlemage Hugues Drop", "collected": true}, {"name": "Skeletal Bandit", "location": "💀Tibia Mariner Drop (Liurnia of the Lakes)", "collected": true}, {"name": "Latenna the Albinauric", "location": "📜Slumbering Wolf's Shack (Lakeside Crystal Cave)", "collected": true}, {"name": "Albinauric", "location": "🌱Three Sisters", "collected": true}, {"name": "Perfumer Tricia", "location": "💀Perfumer Tricia Drop (Unsightly Catacombs)", "collected": true}, {"name": "Winged Misbegotten", "location": "🌱Unsightly Catacombs", "collected": true}, {"name": "Depraved Perfumer Carmaan", "location": "🌱Volcano Manor", "collected": true}, {"name": "Demi-Human", "location": "💀Erdtree Burial Watchdog Drop (Impaler's Catacombs)", "collected": true}, {"name": "Omenkiller Rollo", "location": "💀Fell Twins Drop (Capital Outskirts)", "collected": true}, {"name": "Clayman", "location": "🌱Ainsel River", "collected": true}, {"name": "Blackflame Monk Amon", "location": "💀Stray Mimic Tear Drop ", "collected": true}, {"name": "Oracle Envoy", "location": "🌱Miquella's Haligtree", "collected": true}, {"name": "Ancient Dragon Knight Kristoff*", "location": "💀Ancient Hero of Zamor Drop (Sainted Hero's Grave)", "collected": true}, {"name": "Lone Wolf", "location": "📜Church of Elleh, Limgrave (Given by Renna)", "collected": true}, {"name": "Redmane Knight Ogha*", "location": "💀Putrid Tree Spirit Drop (War-Dead Catacombs)", "collected": true}, {"name": "Rotten Stray", "location": "🌱Sellia, Town of Sorcery", "collected": true}, {"name": "Lhutel the Headless*", "location": "💀Cemetary Shade Drop (Tombsward Catacombs)", "collected": true}, {"name": "Giant Rat", "location": "🌱West Windmill Pasture", "collected": true}, {"name": "Cleanrot Knight Finlay*", "location": "🌱Elphael, Brace of the Haligtree", "collected": true}, {"name": "Warhawk", "location": "📜Prophecy Painting Reward", "collected": false}, {"name": "Black Knife Tiche*", "location": "💀Alecto, Black Knife Ringleader Drop", "collected": true}, {"name": "Land Squirt", "location": "🌱Liurnia Lake", "collected": false}, {"name": "Mimic Tear*", "location": "🌱Night's Sacred Ground", "collected": true}, {"name": "Jellyfish", "location": "📜Stormhill Shack (Given by Roderika)", "collected": true}, {"name": "Miranda Sprout", "location": "🌱Caelid Catacombs", "collected": false}, {"name": "👻PUPPET ASHES", "location": "LOCATION", "collected": true}, {"name": "Fanged Imp", "location": "💰Isolated Merchant Shop (Main Academy Gate)", "collected": false}, {"name": "Finger Maiden Therolina Puppet", "location": "📜💰Preceptor Seluvis Questline", "collected": true}, {"name": "Soldjars of Fortune", "location": "💀Grave Warden Duelist (Auriza Side Tomb)", "collected": true}, {"name": "Jarwight Puppet", "location": "📜💰Preceptor Seluvis Questline", "collected": true}, {"name": "Dolores the Sleeping Arrow Puppet", "location": "📜💰Preceptor Seluvis Questline", "collected": false}, {"name": "Nightmaiden and Swordstress Puppets", "location": "🌱Nokstella, Eternal City", "collected": true}, {"name": "Archer", "location": "🌱Nokstella, Eternal City", "collected": true}, {"name": "Nepheli Loux Puppet", "location": "📜💰Preceptor Seluvis Questline & Nepheli Loux Questline", "collected": false}, {"name": "Greatshield Soldier", "location": "🌱Nokron, Eternal City", "collected": true}, {"name": "Dung Eater Puppet", "location": "📜💰Preceptor Seluvis Questline & Dung Eater Questline", "collected": false}, {"name": "Page", "location": "🌱Cliffbottom Catacombs", "collected": true}, {"name": "Vulgar Militia", "location": "🌱Auriza Hero's Grave", "collected": false}, {"name": "Marionette Soldier", "location": "🌱Raya Lucaria Academy", "collected": true}, {"name": "Avionette Soldier", "location": "🌱Raya Lucaria Academy", "collected": true}, {"name": "Kaiden Sellsword", "location": "💀Erdtree Burial Watchdog Drop (Cliffbottom Catacombs)", "collected": true}, {"name": "Mad Pumpkin Head", "location": "💀Erdtree Burial Watchdog Duo Drop (Minor Erdtree Catacombs)", "collected": true}, {"name": "Fire Monk", "location": "🌱Giant's Mountaintops Catacombs", "collected": true}, {"name": "Ancestral Follower", "location": "💀Ancestral Spirit Drop", "collected": true}, {"name": "Azula Beastman", "location": "🌱Crumbling Farum Azula", "collected": false}, {"name": "Man-Serpent", "location": "🌱Volcano Manor", "collected": true}, {"name": "Crystalian", "location": "🌱Sellia Hideaway", "collected": true}, {"name": "Kindred of Rot", "location": "💀Cemetary Shade Drop (Caelid Catacombs)", "collected": true}, {"name": "Glintstone Sorcerer", "location": "💀Spirit-Caller Snail Drop (Road's End Catacombs)", "collected": true}, {"name": "Twinsage Sorcerer", "location": "💀Cemetary Shade Drop (Black Knife Catacombs)", "collected": true}, {"name": "Godrick Soldier", "location": "🌱Cemetary in Stormhill ", "collected": false}, {"name": "Raya Lucaria Soldier", "location": "🌱Road's End Catacombs", "collected": true}, {"name": "Leyndell Soldier", "location": "🌱Sainted Hero's Grave", "collected": true}, {"name": "Radahn Soldier", "location": "🌱War-Dead Catacombs", "collected": true}, {"name": "Haligtree Soldier", "location": "🌱Elphael, Brace of the Haligtree", "collected": true}, {"name": "Mausoleum Soldier", "location": "🌱Deeproot Depths", "collected": false}], "talismans": [{"name": "Crimson Amber Medallion", "effect": "Raises Maximum Health Points by 6%", "location": "💰Nomadic Merchant (Weeping Peninsula), Starting Keepsake", "collected": true}, {"name": "Crimson Amber Medallion +1", "effect": "Raises Maximum Health Points by 7%", "location": "🌱Volcano Manor", "collected": true}, {"name": "Crimson Amber Medallion +2", "effect": "Raises Maximum Health Points by 7.5%", "location": "🌱Leyndell, Capital of Ash", "collected": false}, {"name": "Crimson Seed Talisman", "effect": "Restore 20% More Health Points from Crimson Flasks", "location": "🌱Sainted Hero's Grave", "collected": true}, {"name": "Blessed Dew Talisman", "effect": "Restores 2 Health Points per Second", "location": "🌱Divine Bridge (Leyndell)", "collected": true}, {"name": "Cerulean Amber Medallion", "effect": "Raises Maximum Focus Points by 7%", "location": "🌱Lakeside Crystal Cave", "collected": true}, {"name": "Cerulean Amber Medallion +1", "effect": "Raises Maximum Focus Points by 9%", "location": "🌱Castle Sol", "collected": true}, {"name": "Cerulean Amber Medallion +2", "effect": "Raises Maximum Focus Points by 11%", "location": "🌱Lunar Estate Ruins", "collected": true}, {"name": "Cerulean Seed Talisman", "effect": "Restores 20% More Focus Points from Cerulean Flasks", "location": "🌱Carian Study Hall", "collected": true}, {"name": "Viridian Amber Medallion", "effect": "Raises Maximum Stamina Points by 11%", "location": "💀Miranda, the Blighted Bloom Drop (Tombsward Cave)", "collected": true}, {"name": "Viridian Amber Medallion +1", "effect": "Raises Maximum Stamina Points by 13%", "location": "🦴Margit Drop (Altus Plateau)", "collected": true}, {"name": "Viridian Amber Medallion +2", "effect": "Raises Maximum Stamina Points by 15%", "location": "🌱Miquella's Haligtree", "collected": true}, {"name": "Green Turtle Talisman", "effect": "Raises Stamina Recovery Speed by 8 Points per Second", "location": "🌱Summonwater Village", "collected": true}, {"name": "Arsenal Charm", "effect": "Raises Maximum Equip Load by 15%", "location": "🌱Stormveil Castle", "collected": true}, {"name": "Arsenal Charm +1", "effect": "Raises Maximum Equip Load by 17%", "location": "🌱Altus Tunnel", "collected": true}, {"name": "Great-jar's Arsenal", "effect": "Raises Maximum Equip Load by 19%", "location": "💀Invader Trio Drop (Great-Jar Colliseum Caelid)", "collected": true}, {"name": "Erdtree's Favor", "effect": "Raises Health Points by 3%, Stamina by 6.75%, and Equip Load by 5%", "location": "🌱Fringefolk Hero's Grave", "collected": false}, {"name": "Erdtree's Favor +1", "effect": "Raises Health Points by 3.5%, Stamina by 8.25%, and Equip Load by 6.5%", "location": "🌱Cathedral of the Forsaken", "collected": true}, {"name": "Erdtree's Favor +2", "effect": "Raises Health Points by 4%, Stamina by 9.6%, and Equip Load by 8%", "location": "🌱Leyndell, Capital of Ash", "collected": false}, {"name": "Radagon's Scarseal", "effect": "Raises Vigor, Endurance, Strength, and Dexterity by 3, take 10% increased damage", "location": "💀Ancient Hero of Zamor Drop (Weeping Evergaol)", "collected": true}, {"name": "Radagon's Soreseal", "effect": "Raises Vigor, Endurance, Strength, and Dexterity by 5, take 15% increased damage", "location": "🌱Fort Faroth in Caelid", "collected": true}, {"name": "Marika's Scarseal", "effect": "Raises Mind, Intelligence, Faith, and Arcane by 3, take 10% Increased damage", "location": "🌱Siofra River", "collected": true}, {"name": "Marika's Soreseal", "effect": "Raises Mind, Intelligence, Faith, and Arcane by 5, take 15% Increased damage", "location": "🌱Elphael, Brace of the Haligtree", "collected": true}, {"name": "Starscourge Heirloom", "effect": "Raises Strength by 5", "location": "🌱Fort Gael in Caelid", "collected": true}, {"name": "Prothesis-Wearer Heirloom", "effect": "Raises Dexterity by 5", "location": "📜Gowry Questline, 📜Millicent Questline", "collected": true}, {"name": "Stargazer Heirloom", "effect": "Raises Intelligence by 5", "location": "🌱Divine Tower of Liurnia", "collected": true}, {"name": "Two Fingers Heirloom", "effect": "Raises Faith by 5", "location": "🌱Purified Ruins ", "collected": true}, {"name": "Dragoncrest Shield Talisman", "effect": "Reduces damage from Physical attacks by 10%", "location": "🌱Bestial Sanctum Exterior", "collected": true}, {"name": "Dragoncrest Shield Talisman +1", "effect": "Reduces damage from Physical attacks by 13%", "location": "🌱Sainted Hero's Grave", "collected": true}, {"name": "Dragoncrest Shield Talisman +2", "effect": "Reduces damage from Physical attacks by 17%", "location": "🌱Crumbling Farum Azula", "collected": false}, {"name": "Dragoncrest Greatshield Talisman", "effect": "Reduces damage from Physical attacks by 20%", "location": "🌱Elphael, Brace of the Haligtree", "collected": false}, {"name": "Spelldrake Talisman", "effect": "Reduces damage from Magic attacks by 13%", "location": "💀Runebear Drop (Earthbore Cave) ", "collected": true}, {"name": "Spelldrake Talisman +1", "effect": "Reduces damage from Magic attacks by 17%", "location": "🌱Sellia, Town of Sorcery", "collected": true}, {"name": "Spelldrake Talisman +2", "effect": "Reduces damage from Magic attacks by 20%", "location": "🌱Hidden Path to the Haligtree", "collected": true}, {"name": "Flamedrake Talisman", "effect": "Reduces damage from Fire attacks by 13%", "location": "💀Beastman of Farum Azula Drop (Groveside Cave)", "collected": true}, {"name": "Flamedrake Talisman +1", "effect": "Reduces damage from Fire attacks by 17%", "location": "🌱Leyndell, Royal Capital", "collected": true}, {"name": "Flamedrake Talisman +2", "effect": "Reduces damage from Fire attacks by 20%", "location": "💀Azula Beastman Duo (Dragonsbarrow Cave)", "collected": true}, {"name": "Boltdrake Talisman", "effect": "Reduces damage from Lightning attacks by 13%", "location": "🌱Stormveil Castle", "collected": true}, {"name": "Boltdrake Talisman +1", "effect": "Reduces damage from Lightning attacks by 17%", "location": "🌱Old Altus Tunnel", "collected": true}, {"name": "Boltdrake Talisman +2", "effect": "Reduces damage from Lightning attacks by 20%", "location": "🌱Crumbling Farum Azula", "collected": false}, {"name": "Haligdrake Talisman", "effect": "Reduces damage from Holy attacks by 13%", "location": "🌱Stranded Graveyard", "collected": false}, {"name": "Haligdrake Talisman +1", "effect": "Reduces damage from Holy attacks by 17%", "location": "🌱Subterranean Shunning Grounds", "collected": false}, {"name": "Haligdrake Talisman +2", "effect": "Reduces damage from Holy attacks by 20%", "location": "🌱Mohgwyn Palace", "collected": true}, {"name": "Pearldrake Talisman", "effect": "Reduces damage from Non-Physical attacks by 5%", "location": "🌱Crumbling Farum Azula (The Four Belfries)", "collected": true}, {"name": "Pearldrake Talisman +1", "effect": "Reduces damage from Non-Physical attacks by 7%", "location": "🌱Wyndham Ruins in Mt. Gelmir", "collected": true}, {"name": "Pearldrake Talisman +2", "effect": "Reduces damage from Non-Physical attacks by 9%", "location": "🌱Miquella's Haligtree", "collected": true}, {"name": "Immunizing Horn Charm", "effect": "Raises Immunity by 90", "location": "🌱Ainsel River", "collected": true}, {"name": "Immunizing Horn Charm +1", "effect": "Raises Immunity by 140", "location": "🦴Ancestral Shaman Drop (Lake of Rot)", "collected": true}, {"name": "Stalwart Horn Charm", "effect": "Raises Robustness by 90", "location": "🌱Mausoleum Compound", "collected": true}, {"name": "Stalwart Horn Charm +1", "effect": "Raises Robustness by 140", "location": "🌱Yelough Anix Ruins", "collected": false}, {"name": "Clarifying Horn Charm", "effect": "Raises Focus by 90", "location": "🌱Siofra River", "collected": true}, {"name": "Clarifying Horn Charm +1", "effect": "Raises Focus by 140", "location": "🌱Nokron, Eternal City", "collected": false}, {"name": "Mottled Necklace", "effect": "Raises Immunity, Robustness, and Focus by 40", "location": "🌱Nokron, Eternal City (The Four Belfries)", "collected": true}, {"name": "Mottled Necklace +1", "effect": "Raises Immunity, Robustness, and Focus by 60", "location": "🌱Nokron, Eternal City", "collected": true}, {"name": "Prince of Death's Pustule", "effect": "Raises Vitality by 90", "location": "🌱Stormveil Castle", "collected": true}, {"name": "Prince of Death's Cyst", "effect": "Raises Vitality by 140", "location": "🦴Runebear Drop (Deeproot Depths)", "collected": true}, {"name": "Curved Sword Talisman", "effect": "20% Increased Guard Counter Damage", "location": "🌱Stormveil Castle", "collected": true}, {"name": "Twinblade Talisman", "effect": "20% Increased Damage of Final Hit in Chain Attacks", "location": "🌱Castle Morne", "collected": true}, {"name": "Axe Talisman", "effect": "10% Increased Damage with Charge Attacks", "location": "🌱Mistwood Ruins", "collected": true}, {"name": "Hammer Talisman", "effect": "20% Increased Stamina Damage against Blockers", "location": "💀Recusant Henricus Drop (North Limgrave)", "collected": true}, {"name": "Spear Talisman", "effect": "13% Increased Damage with Counter Attacks", "location": "🌱Lakeside Crystal Cave", "collected": true}, {"name": "Lance Talisman", "effect": "15% Increased Damage while riding Horseback", "location": "🌱Stormhill", "collected": false}, {"name": "Claw Talisman", "effect": "15% Increased Damage with Jumping Attacks", "location": "🌱Stormveil Castle Rooftops", "collected": true}, {"name": "Dagger Talisman", "effect": "17% Increased Damage with Critical Attacks", "location": "🌱Volcano Manor", "collected": true}, {"name": "Greatshield Talisman", "effect": "10% Decreased Stamina Damage taken when Blocking", "location": "🌱Stationary Wagon (Altus Plateau)", "collected": true}, {"name": "Arrow's Sting Talisman", "effect": "10% Increased Damage with Arrows & Bolts", "location": "🌱Impassable Bridge Tower", "collected": true}, {"name": "Arrow's Reach Talisman", "effect": "Increases Arrow & Bolt travel distance, and Decreases their Damage Fall-off", "location": "🌱Stormgate", "collected": false}, {"name": "Graven-School Talisman", "effect": "4% Increased Sorcery Damage", "location": "🌱Raya Lucaria Academy", "collected": false}, {"name": "Graven-Mass Talisman", "effect": "8% Increased Sorcery Damage", "location": "🌱Consecrated Snowfields, Albinauric Rise", "collected": true}, {"name": "Faithful's Canvas Talisman", "effect": "4% Increased Incantation Damage", "location": "🌱Sellia Crystal Cave", "collected": true}, {"name": "Flock's Canvas Talisman", "effect": "8% Increased Incantation Damage", "location": "🦴Gowry Drop (📜Millicent Questline)", "collected": true}, {"name": "Primal Glintstone Blade", "effect": "Reduces Spell FP Cost by 25%, and Decreases Maximum HP by 15%", "location": "🌱Stargazer Ruins", "collected": true}, {"name": "Moon of Nokstella", "effect": "Increases Memory Slots by 2", "location": "🌱Nokstella, Eternal City", "collected": true}, {"name": "Old Lord's Talisman", "effect": "Increases the Duration of Spells by 30%", "location": "🌱Crumbling Farum Azula", "collected": false}, {"name": "Radagon Icon", "effect": "Raises Dexterity by 30 (Virtually) exclusively for the Spell Casting Speed increase", "location": "🌱Raya Lucaria Academy", "collected": false}, {"name": "Roar Medallion", "effect": "15% Increased Damage with Roar Attacks", "location": "💀Stonedigger Troll Drop (Limgrave Tunnels)", "collected": true}, {"name": "Companion Jar", "effect": "20% Increased Damage with Thrown Pots", "location": "📜Jar Bairn's Questline", "collected": false}, {"name": "Perfumer's Talisman", "effect": "20% Increased Damage with Perfumes", "location": "🌱Perfumer's Ruins", "collected": true}, {"name": "Carian Filligreed Crest", "effect": "Reduces Skill FP Cost by 25%", "location": "💰War Counselor Iji Shop (📜Blaidd Questline)", "collected": false}, {"name": "Warrior Jar Shard", "effect": "10% Increased Damage with Weapon Skills", "location": "🦴Iron Fist Alexander Drop", "collected": false}, {"name": "Shard of Alexander", "effect": "15% Increased Damage with Weapon Skills", "location": "📜Iron Fist Alexander Questline", "collected": false}, {"name": "Godfrey Icon", "effect": "15% Increased Damage with Charged Skills and Spells", "location": "💀Godefroy the Grafted Drop ", "collected": true}, {"name": "Bull-Goat's Talisman", "effect": "Raises Poise by 33.3%", "location": "🌱Dragonsbarrow Cave", "collected": true}, {"name": "Blue Dancer's Charm", "effect": "Increases Physical Damage Scaling with very low Equip Loads", "location": "💀Guardian Golem Drop (Highroad Cave)", "collected": true}, {"name": "Magic Scorpion Charm", "effect": "12% Increased Magic Damage, take 10% Increased Damage", "location": "📜Preceptor Seluvis Questline", "collected": false}, {"name": "Fire Scorpion Charm", "effect": "12% Increased Fire Damage, take 10% Increased Damage", "location": "🌱Fort Laiedd in Mt. Gelmir", "collected": true}, {"name": "Lightning Scorpion Charm", "effect": "12% Increased Lightning Damage, take 10% Increased Damage", "location": "🌱Wyndham Ruins in Mt. Gelmir", "collected": true}, {"name": "Sacred Scorpion Charm", "effect": "12% Increased Holy Damage, take 10% Increased Damage", "location": "💀Anastasia, Tarnished Eater Drop (Smoldering Church)", "collected": true}, {"name": "Crucible Scale Talisman", "effect": "30% Decreased Damage taken from Critical Strikes", "location": "🌱Leyndell Catacombs", "collected": false}, {"name": "Crucible Feather Talisman", "effect": "Increases Invincibility Frames of Dodge Rolls, but take 30% Increased Damage", "location": "🌱Auriza Hero's Grave", "collected": false}, {"name": "Crucible Knot Talisman", "effect": "Reduces Damage and Impact when hit in the head", "location": "💀Omenkiller Drop (Village of the Albinaurics)", "collected": true}, {"name": "Red-Feathered Branchsword", "effect": "20% Increased Damage when below 20% Maximum Health Points", "location": "💀Deathbird Drop (Liurnia of the Lakes)", "collected": false}, {"name": "Blue-Feathered Branchsword", "effect": "50% Decreased Damage taken when below 20% Maximum Health Points", "location": "💀Deathbird Drop (Limgrave)", "collected": true}, {"name": "Ritual Sword Talisman", "effect": "10% Increased Damage when at 100% Maximum Health Points", "location": "🌱Lux Ruins", "collected": true}, {"name": "Ritual Shield Talisman", "effect": "30% Decreased Damage taken when at 100% Maximum Health Points", "location": "🌱Leyndell Colliseum", "collected": true}, {"name": "Assassin's Crimson Dagger", "effect": "Restores 10% of Maximum HP + 85 HP when a Crititcal Strike is performed", "location": "💀Black Knife Assassin Drop (Deathtouched Catacombs)", "collected": true}, {"name": "Assassin's Cerulean Dagger", "effect": "Restores 15 FP when a Critical Strike is performed", "location": "💀Black Knife Assassin Drop (Black Knife Catacombs)", "collected": true}, {"name": "Winged Sword Insignia", "effect": "Increased Damage with Successive hits (3%, 8%, 10%, 14%)", "location": "💀Cleanrot Knight Drop (Stillwater Cave)", "collected": true}, {"name": "Rotten Winged Sword Insignia", "effect": "Increased Damage with Successive hits (6%, 10%, 14%, 18%, 22%)", "location": "📜Millicent Questline (Ally)", "collected": true}, {"name": "Millicent's Prosthesis", "effect": "Raises Dexterity by 5, Increased Damage with Successive hits (4%, 6%, 11%, 18%)", "location": "📜Millicent Questline (Challenge)", "collected": false}, {"name": "Godskin Swaddling Cloth", "effect": "Restores 3% of Maximum HP + 30 HP on the 3rd through 7th hits in Successive hits", "location": "💀Godskin Noble & Godskin Apostle Drop (Spiritcaller's Cave)", "collected": true}, {"name": "Kindred of Rot's Exultation", "effect": "20% Increased Damage for 20 Seconds when you or others get poison or scarlet rot", "location": "💀Kindred of Rot Drop (Seethewater Cave)", "collected": true}, {"name": "Lord of Blood's Exultation", "effect": "20% Increased Damage for 20 Seconds when you or others get blood loss", "location": "💀Esgar, Priest of Blood Drop", "collected": true}, {"name": "Taker's Cameo", "effect": "Restores 3% of Maximum HP + 30 HP on Kill", "location": "📜3rd Volcano Manor Request Reward", "collected": true}, {"name": "Ancestral Spirit's Horn", "effect": "Restores 3 FP on Kill", "location": "💎Remembrance of the Regal Ancestor option", "collected": false}, {"name": "Gold Scarab", "effect": "Increases Rune Gain by 20%", "location": "💀Cleanrot Knight Duo (Abandoned Cave)", "collected": true}, {"name": "Silver Scarab", "effect": "Raises Discovery by 75", "location": "🌱Hidden Path to the Haligtree", "collected": true}, {"name": "Crepus's Vial", "effect": "Eliminates sound made by the wearer's movements", "location": "💀Rileigh the Idle Drop (Volcano Manor Request)", "collected": true}, {"name": "Concealing Veil", "effect": "Conceals the wearer when crouched away from foes", "location": "💀Black Knife Assassin Drop (Sage's Cave)", "collected": true}, {"name": "Longtail Cat Talisman", "effect": "Negates all Non-Lethal Fall Damage", "location": "🌱Raya Lucaria Academy", "collected": false}, {"name": "Furled Finger's Trick Mirror", "effect": "Take on the appearance of the Host of Fingers", "location": "💰Twin Maiden Husk Shop", "collected": false}, {"name": "Host's Trick Mirror", "effect": "Take on the appearance of a Cooperator ", "location": "💰Twin Maiden Husk Shop", "collected": false}, {"name": "Shabriri's Woe", "effect": "Constantly attracts enemies aggression", "location": "🌱Frenzied Flame Village, Starting Keepsake", "collected": true}, {"name": "Daedicar's Woe", "effect": "Doubles all Damage taken", "location": "📜Rya Questline", "collected": false}, {"name": "Sacrificial Twig", "effect": "Will be lost on Death instead of Runes", "location": "See Graph Below", "collected": false}, {"name": "SACRIFICIAL TWIGS", "effect": "LOCATION", "location": "COLLECTED", "collected": false}, {"name": "Sacrificial Twig #1", "effect": "💰Patches Shop", "location": "", "collected": false}, {"name": "Sacrificial Twig #2", "effect": "🌱Mistwood (Limgrave)", "location": "", "collected": false}, {"name": "Sacrificial Twig #3", "effect": "💰Isolated Merchant Shop (Weeping Peninsula)", "location": "", "collected": false}, {"name": "Sacrificial Twig #4", "effect": "💰Isolated Merchant Shop (Weeping Peninsula)", "location": "", "collected": false}, {"name": "Sacrificial Twig #5", "effect": "💰Isolated Merchant Shop (Weeping Peninsula)", "location": "", "collected": false}, {"name": "Sacrificial Twig #6", "effect": "📜Given by Edgar (Castle Morne)", "location": "", "collected": false}, {"name": "Sacrificial Twig #7", "effect": "📜Given by Fia (Rogier Dialogue, Rogier Questline)", "location": "", "collected": false}, {"name": "Sacrificial Twig #8", "effect": "🌱South Liurnia of the Lakes", "location": "", "collected": false}, {"name": "Sacrificial Twig #9", "effect": "💰Isolated Merchant Shop (Main Academy Gate)", "location": "", "collected": false}, {"name": "Sacrificial Twig #10", "effect": "💰Isolated Merchant Shop (Main Academy Gate)", "location": "", "collected": false}, {"name": "Sacrificial Twig #11", "effect": "💰Isolated Merchant Shop (Main Academy Gate)", "location": "", "collected": false}, {"name": "Sacrificial Twig #12", "effect": "🌱Altus Plateau (Soldier Camp)", "location": "", "collected": false}, {"name": "Sacrificial Twigs", "effect": "🦴Wormface Drop (Altus Plateau, Crumbling Farum Azula)", "location": "", "collected": false}], "armor": {}};
+
+/* ════════════════════════════════════════════════════
+   SotE-EXCLUSIVE ITEM LOOKUP
+   Only truly DLC-exclusive items (not base game +1/+2 upgrades)
+════════════════════════════════════════════════════ */
+const SOTE_SET = new Set([
+  "Crucible Scale Talisman","Dried Bouquet Talisman","Verdigris Discus",
+  "Backhand Blade Talisman","St. Trina's Smile","Blessed Blue Dew Talisman",
+  "Shadow Bait","Vortex of Lunacy","Fleeting Microcosm","Impenetrable Thorns",
+  "Miriam's Vanishing","Rellana's Twin Moons","Carian Sovereignty",
+  "Cherishing Fingers","Magnetic Force","Light of Miquella",
+  "Aspects of the Crucible: Bloom","Aspects of the Crucible: Thorns",
+  "Heal from Afar","Wrath from Afar","Watchful Spirit","Roar of Rugalea",
+  "Divine Beast Tornado","Messmer's Orb","Rain of Fire",
+  "Furious Blade of Ansbach","Multilayered Ring of Light","Blade of Light",
+]);
+const isDLC = n => SOTE_SET.has(n);
+const dlcBadge = n => isDLC(n) ? '<span class="dlc">DLC</span>' : '';
+
+/* ════════════════════════════════════════════════════
+   PLAYTHROUGH STATE
+   Structure: characters[] stored in localStorage
+   Active: currentChar, currentJourney
+   State key: er4_{charName}_{journey}
+════════════════════════════════════════════════════ */
+const JOURNEYS = ['NG','NG+1','NG+2','NG+3','NG+4','NG+5','NG+6','NG+7'];
+let chars = [];
+let currentChar = '';
+let currentJourney = 'NG';
+let state = null;
+
+function stateKey(c, j) { return 'er4_' + c.replace(/\W/g,'_') + '_' + j.replace('+','p'); }
+function metaKey() { return 'er4_meta'; }
+
+function loadMeta() {
+  try {
+    const m = JSON.parse(localStorage.getItem(metaKey()) || 'null');
+    if (m) { chars = m.chars || []; currentChar = m.lastChar || ''; currentJourney = m.lastJourney || 'NG'; }
+  } catch(e) {}
+  if (!chars.length) { chars = ['Tarnished']; currentChar = 'Tarnished'; }
+  if (!currentChar || !chars.includes(currentChar)) currentChar = chars[0];
+}
+
+function saveMeta() {
+  localStorage.setItem(metaKey(), JSON.stringify({ chars, lastChar: currentChar, lastJourney: currentJourney }));
+}
+
+function loadState() {
+  try {
+    const s = localStorage.getItem(stateKey(currentChar, currentJourney));
+    return s ? JSON.parse(s) : null;
+  } catch(e) { return null; }
+}
+
+function saveState() {
+  localStorage.setItem(stateKey(currentChar, currentJourney), JSON.stringify(state));
+}
+
+function freshState() {
+  return {
+    bosses: Object.fromEntries(Object.entries(RAW.bosses).map(([r,bs]) => [r, bs.map(b => ({...b}))])),
+    sote_bosses: Object.fromEntries(Object.entries(RAW.sote_bosses).map(([r,bs]) => [r, bs.map(b => ({...b}))])),
+    weapons: Object.fromEntries(Object.entries(RAW.weapons).map(([c,ws]) => [c, ws.map(w => ({...w}))])),
+    sorceries: RAW.sorceries.map(s => ({...s})),
+    incantations: RAW.incantations.map(s => ({...s})),
+    spirit_ashes: RAW.spirit_ashes.map(s => ({...s})),
+    talismans: RAW.talismans.map(t => ({...t})),
+  };
+}
+
+function switchTo(char, journey) {
+  saveState();
+  currentChar = char;
+  currentJourney = journey;
+  saveMeta();
+  state = loadState() || freshState();
+  buildSelectors();
+  renderAll();
+}
+
+function onCharChange(c) { switchTo(c, currentJourney); }
+function onJourneyChange(j) { switchTo(currentChar, j); }
+
+function buildSelectors() {
+  const cs = document.getElementById('char-sel');
+  cs.innerHTML = chars.map(c => `<option value="${c}" ${c===currentChar?'selected':''}>${c}</option>`).join('');
+  const js = document.getElementById('journey-sel');
+  js.innerHTML = JOURNEYS.map(j => `<option value="${j}" ${j===currentJourney?'selected':''}>${j}</option>`).join('');
+}
+
+/* ── CHARACTER MODAL ── */
+let modalMode = 'char';
+function openNewChar() {
+  modalMode = 'char';
+  document.getElementById('modal-title').textContent = 'NEW CHARACTER';
+  document.getElementById('modal-desc').textContent = 'Give your character a name. Each character tracks all journeys (NG – NG+7) independently with a fresh slate.';
+  document.getElementById('modal-ok').textContent = 'Create';
+  document.getElementById('modal-inp').value = '';
+  document.getElementById('modal-wrap').classList.add('open');
+  setTimeout(() => document.getElementById('modal-inp').focus(), 60);
+}
+function closeModal() { document.getElementById('modal-wrap').classList.remove('open'); }
+function confirmModal() {
+  const name = document.getElementById('modal-inp').value.trim();
+  if (!name) return;
+  if (chars.includes(name)) { alert('A character with that name already exists.'); return; }
+  chars.push(name);
+  saveMeta();
+  // Always fresh — never inherit existing state
+  saveState();
+  currentChar = name;
+  currentJourney = 'NG';
+  state = freshState();
+  saveMeta();
+  saveState();
+  buildSelectors();
+  renderAll();
+  closeModal();
+}
+document.getElementById('modal-inp').addEventListener('keydown', e => {
+  if (e.key === 'Enter') confirmModal();
+  if (e.key === 'Escape') closeModal();
+});
+document.getElementById('modal-wrap').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-wrap')) closeModal();
+});
+
+/* ── THEME ── */
+function setTheme(t, btn) {
+  document.body.className = t === 'elden' ? 't-elden' : t === 'sote' ? 't-sote' : '';
+  document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  localStorage.setItem('er_theme', t);
+}
+
+/* ── TABS ── */
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.snav').forEach(b => b.classList.remove('on'));
+  document.getElementById('tab-' + id).classList.add('on');
+  btn.classList.add('on');
+}
+
+/* ── HELPERS ── */
+function pct(a, b) { return b ? Math.round(a / b * 100) : 0; }
+function clean(n) { return n.replace(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27FF}\u{1F000}-\u{1F02F}]/gu, '').trim(); }
+function bStats(map) {
+  let total=0,killed=0,deaths=0;
+  for (const bs of Object.values(map)) {
+    total += bs.length;
+    killed += bs.filter(b => b.killed).length;
+    deaths += bs.reduce((s,b) => s + (b.attempts||0), 0);
+  }
+  return {total, killed, deaths};
+}
+function iStats(arr) { return {total:arr.length, got:arr.filter(x=>x.collected||x.killed).length}; }
+function mStats(map) { let t=0,g=0; for(const v of Object.values(map)){t+=v.length;g+=v.filter(x=>x.collected).length;} return{total:t,got:g}; }
+
+/* ── DASHBOARD ── */
+function renderDash() {
+  const base = bStats(state.bosses), sote = bStats(state.sote_bosses);
+  const weap = mStats(state.weapons), sorc = iStats(state.sorceries);
+  const incan = iStats(state.incantations), spir = iStats(state.spirit_ashes);
+  const tali = iStats(state.talismans);
+  const allBase = Object.values(state.bosses).flat().filter(b=>b.attempts>0).sort((a,b)=>b.attempts-a.attempts);
+  const allSote = Object.values(state.sote_bosses).flat().filter(b=>b.attempts>0).sort((a,b)=>b.attempts-a.attempts);
+  const hardest = allBase[0];
+  const maxB = allBase[0]?.attempts||1, maxS = allSote[0]?.attempts||1;
+
+  const sc = (lbl,num,lines,cls,prog) => `
+    <div class="sc ${cls||''}">
+      <div class="sc-lbl">${lbl}</div>
+      <div class="sc-num">${num}</div>
+      ${lines.map(l=>`<div class="sc-line"><span class="sc-ll">${l.l}</span><span class="sc-lv ${l.c||''}">${l.v}</span></div>`).join('')}
+      ${prog!==null?`<div class="prog"><div class="prog-f" style="width:${prog}%"></div></div>`:''}
+    </div>`;
+
+  document.getElementById('dash-body').innerHTML = `
+  <div class="dash-sec">
+    <div class="dash-sec-title">BOSSES</div>
+    <div class="stat-grid sg-2" style="margin-bottom:8px">
+      ${sc('BASE GAME',`${base.killed}/${base.total}`,[
+        {l:'completion',v:`${pct(base.killed,base.total)}%`,c:'g'},
+        {l:'deaths',v:base.deaths,c:'r'},
+        {l:'avg / kill',v:base.killed?(Math.round(base.deaths/base.killed*10)/10)+' deaths':'—'},
+      ],'',pct(base.killed,base.total))}
+      ${sc('SHADOW OF THE ERDTREE',`${sote.killed}/${sote.total}`,[
+        {l:'completion',v:`${pct(sote.killed,sote.total)}%`,c:'g'},
+        {l:'deaths',v:sote.deaths,c:'r'},
+        {l:'avg / kill',v:sote.killed?(Math.round(sote.deaths/sote.killed*10)/10)+' deaths':'—'},
+      ],'acc-sote',pct(sote.killed,sote.total))}
+    </div>
+    <div class="stat-grid sg-3">
+      ${sc('TOTAL DEATHS',base.deaths+sote.deaths,[
+        {l:'base game',v:base.deaths,c:'r'},{l:'SotE DLC',v:sote.deaths,c:'r'}
+      ],'acc-death',null)}
+      ${sc('HARDEST BOSS',hardest?hardest.attempts:'—',[
+        {l:'name',v:hardest?clean(hardest.name):'none yet'},{l:'deaths',v:hardest?hardest.attempts:'0',c:'r'}
+      ],'acc-death',null)}
+      ${sc('TOTAL KILLS',base.killed+sote.killed,[
+        {l:'base game',v:`${base.killed}/${base.total}`,c:'g'},{l:'SotE',v:`${sote.killed}/${sote.total}`,c:'g'}
+      ],'',pct(base.killed+sote.killed,base.total+sote.total))}
+    </div>
+  </div>
+
+  <div class="dash-sec">
+    <div class="dash-sec-title">COLLECTIONS</div>
+    <div class="stat-grid sg-3" style="margin-bottom:8px">
+      ${sc('WEAPONS',`${weap.got}/${weap.total}`,[
+        {l:'collected',v:`${pct(weap.got,weap.total)}%`,c:'g'},{l:'remaining',v:weap.total-weap.got}
+      ],'',pct(weap.got,weap.total))}
+      ${sc('SPIRIT ASHES',`${spir.got}/${spir.total}`,[
+        {l:'collected',v:`${pct(spir.got,spir.total)}%`,c:'g'},{l:'remaining',v:spir.total-spir.got}
+      ],'',pct(spir.got,spir.total))}
+      ${sc('TALISMANS',`${tali.got}/${tali.total}`,[
+        {l:'collected',v:`${pct(tali.got,tali.total)}%`,c:'g'},{l:'remaining',v:tali.total-tali.got}
+      ],'',pct(tali.got,tali.total))}
+    </div>
+    <div class="stat-grid sg-2">
+      ${sc('SORCERIES',`${sorc.got}/${sorc.total}`,[
+        {l:'collected',v:`${pct(sorc.got,sorc.total)}%`,c:'g'},{l:'remaining',v:sorc.total-sorc.got}
+      ],'acc-spell',pct(sorc.got,sorc.total))}
+      ${sc('INCANTATIONS',`${incan.got}/${incan.total}`,[
+        {l:'collected',v:`${pct(incan.got,incan.total)}%`,c:'g'},{l:'remaining',v:incan.total-incan.got}
+      ],'acc-spell',pct(incan.got,incan.total))}
+    </div>
+  </div>
+
+  <div class="ldr-grid">
+    <div class="ldr">
+      <div class="ldr-hdr">MOST DEATHS — BASE GAME</div>
+      ${allBase.slice(0,8).map((b,i)=>`
+        <div class="ldr-row">
+          <div class="ldr-n">${i+1}</div>
+          <div style="flex:1"><div class="ldr-name">${clean(b.name)}</div>
+          <div class="ldr-bar"><div class="ldr-bar-f" style="width:${Math.round(b.attempts/maxB*100)}%"></div></div></div>
+          <div class="ldr-d">${b.attempts}</div>
+        </div>`).join('') || '<div class="ldr-empty">No deaths recorded yet</div>'}
+    </div>
+    <div class="ldr" style="border-color:var(--sote-border)">
+      <div class="ldr-hdr" style="color:var(--sote-text2)">MOST DEATHS — SHADOW OF THE ERDTREE</div>
+      ${allSote.slice(0,8).map((b,i)=>`
+        <div class="ldr-row">
+          <div class="ldr-n" style="color:var(--sote-text2)">${i+1}</div>
+          <div style="flex:1"><div class="ldr-name" style="color:var(--sote-text)">${b.name}</div>
+          <div class="ldr-bar"><div class="ldr-bar-f" style="width:${Math.round(b.attempts/maxS*100)}%;background:var(--sote-acc)"></div></div></div>
+          <div class="ldr-d" style="color:var(--sote-acc)">${b.attempts}</div>
+        </div>`).join('') || '<div class="ldr-empty" style="color:var(--sote-text2)">No deaths recorded yet</div>'}
+    </div>
+  </div>`;
+}
+
+/* ── BOSS REGIONS ── */
+function renderBosses(filter) {
+  const q = (filter||'').toLowerCase();
+  const el = document.getElementById('boss-body');
+  el.innerHTML = '';
+  for (const [region, bosses] of Object.entries(state.bosses)) {
+    const f = q ? bosses.filter(b => clean(b.name).toLowerCase().includes(q)) : bosses;
+    if (q && !f.length) continue;
+    const killed = f.filter(b=>b.killed).length;
+    const block = document.createElement('div');
+    block.className = 'region-block';
+    block.innerHTML = `
+      <div class="r-prog-bar"><div class="r-prog-fill" style="width:${pct(killed,f.length)}%"></div></div>
+      <div class="r-hdr" onclick="togRegion(this.parentElement)">
+        <div class="r-title">${region}</div>
+        <div class="r-meta">${killed}/${f.length} felled &middot; ${f.reduce((s,b)=>s+(b.attempts||0),0)} deaths</div>
+        <div class="r-chev">&#9660;</div>
+      </div>
+      <div class="r-body">
+        <table class="boss-tbl">
+          <thead><tr><th style="width:26px"></th><th>Boss</th><th style="width:72px;text-align:center">Deaths</th></tr></thead>
+          <tbody>${f.map(b => {
+            const ri = bosses.indexOf(b);
+            const rk = region.replace(/'/g,"\\'");
+            return `<tr class="${b.killed?'killed-row':''}">
+              <td><div class="ck ${b.killed?'on':''}" onclick="togBoss('bosses','${rk}',${ri})">${b.killed?'&#10003;':''}</div></td>
+              <td><div class="b-nm ${b.killed?'k':''}">${clean(b.name)}</div></td>
+              <td style="text-align:center"><input class="d-inp ${(b.attempts||0)>0?'hot':''}" type="number" min="0" value="${b.attempts||0}" onchange="setDeath('bosses','${rk}',${ri},this.value)" onclick="event.stopPropagation()"></td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>`;
+    el.appendChild(block);
+  }
+}
+function filterBosses(v) { renderBosses(v); }
+
+/* ── SOTE REGIONS ── */
+function renderSote(filter) {
+  const q = (filter||'').toLowerCase();
+  const el = document.getElementById('sote-body');
+  el.innerHTML = '';
+  for (const [region, bosses] of Object.entries(state.sote_bosses)) {
+    const f = q ? bosses.filter(b => b.name.toLowerCase().includes(q)) : bosses;
+    if (q && !f.length) continue;
+    const killed = f.filter(b=>b.killed).length;
+    const block = document.createElement('div');
+    block.className = 'region-block sote';
+    block.innerHTML = `
+      <div class="r-prog-bar"><div class="r-prog-fill" style="width:${pct(killed,f.length)}%"></div></div>
+      <div class="r-hdr" onclick="togRegion(this.parentElement)">
+        <div class="r-title">${region}</div>
+        <div class="r-meta" style="color:var(--sote-text2)">${killed}/${f.length} felled &middot; ${f.reduce((s,b)=>s+(b.attempts||0),0)} deaths</div>
+        <div class="r-chev" style="color:var(--sote-acc)">&#9660;</div>
+      </div>
+      <div class="r-body">
+        <table class="boss-tbl">
+          <thead><tr><th style="width:26px"></th><th>Boss</th><th style="width:72px;text-align:center">Deaths</th></tr></thead>
+          <tbody>${f.map(b => {
+            const ri = bosses.indexOf(b);
+            const rk = region.replace(/'/g,"\\'");
+            return `<tr class="${b.killed?'killed-row':''}">
+              <td><div class="ck ${b.killed?'on':''}" onclick="togBoss('sote_bosses','${rk}',${ri})">${b.killed?'&#10003;':''}</div></td>
+              <td><div class="b-nm ${b.killed?'k':''}">${b.name}</div></td>
+              <td style="text-align:center"><input class="d-inp ${(b.attempts||0)>0?'hot':''}" type="number" min="0" value="${b.attempts||0}" onchange="setDeath('sote_bosses','${rk}',${ri},this.value)" onclick="event.stopPropagation()"></td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>`;
+    el.appendChild(block);
+  }
+}
+function filterSote(v) { renderSote(v); }
+
+/* ── TOGGLE / SET ── */
+function togRegion(el) { el.classList.toggle('col'); }
+function togBoss(col, region, idx) {
+  state[col][region][idx].killed = !state[col][region][idx].killed;
+  saveState(); renderAll();
+}
+function setDeath(col, region, idx, val) {
+  state[col][region][idx].attempts = parseInt(val)||0;
+  saveState(); renderDash();
+}
+
+/* ── ITEM SECTION BUILDER (Style C) ── */
+function buildItemSection(cats) {
+  /* cats = [{title, items, toggleFn}] */
+  return cats.map(({title, items, toggleFn}) => {
+    const got = items.filter(x=>x.collected).length;
+    const rows = items.map((item, i) => `
+      <div class="item-row ${item.collected?'got':''}" onclick="${toggleFn}(${i})">
+        <div class="ick ${item.collected?'on':''}">${item.collected?'&#10003;':''}</div>
+        <div class="i-name">${item.name}${dlcBadge(item.name)}</div>
+        <div class="i-loc">${item.location||item.effect||''}</div>
+      </div>`).join('');
+    return `
+      <div class="item-section">
+        <div class="cat-hdr" onclick="togCat(this.parentElement)">
+          <span class="cat-title">${title}</span>
+          <div class="cat-right">
+            <span class="cat-cnt">${got}/${items.length}</span>
+            <span class="cat-chev">&#9660;</span>
+          </div>
+        </div>
+        <div class="cat-rows">${rows}</div>
+      </div>`;
+  }).join('');
+}
+function togCat(el) { el.classList.toggle('cat-collapsed'); }
+
+function collapseAll(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const blocks = container.querySelectorAll('.region-block, .item-section');
+  const allCollapsed = Array.from(blocks).every(b =>
+    b.classList.contains('col') || b.classList.contains('cat-collapsed')
+  );
+  blocks.forEach(b => {
+    if (b.classList.contains('region-block')) {
+      allCollapsed ? b.classList.remove('col') : b.classList.add('col');
+    } else {
+      allCollapsed ? b.classList.remove('cat-collapsed') : b.classList.add('cat-collapsed');
+    }
+  });
+  // Update button text
+  const btn = container.closest('.tab-pane')?.querySelector('.tog-all-btn');
+  if (btn) btn.textContent = allCollapsed ? 'Collapse All' : 'Expand All';
+}
+
+/* ── WEAPONS ── */
+function renderWeapons(filter) {
+  const q = (filter||'').toLowerCase();
+  const el = document.getElementById('weapons-body');
+  const cats = Object.entries(state.weapons).map(([cat, items]) => {
+    const f = q ? items.filter(w => w.name.toLowerCase().includes(q) || w.location.toLowerCase().includes(q)) : items;
+    return {title: cat, items: f, raw: items};
+  }).filter(c => c.items.length);
+
+  el.innerHTML = cats.map(({title, items, raw}) => {
+    const got = items.filter(x=>x.collected).length;
+    const rows = items.map(item => {
+      const ri = raw.indexOf(item);
+      return `<div class="item-row ${item.collected?'got':''}" onclick="togWeapon('${title.replace(/'/g,"\\'")}',${ri})">
+        <div class="ick ${item.collected?'on':''}">${item.collected?'&#10003;':''}</div>
+        <div class="i-name">${item.name}${dlcBadge(item.name)}</div>
+        <div class="i-loc">${item.location||''}</div>
+      </div>`;
+    }).join('');
+    return `<div class="item-section">
+      <div class="cat-hdr" onclick="togCat(this.parentElement)">
+        <span class="cat-title">${title}</span>
+        <div class="cat-right"><span class="cat-cnt">${got}/${items.length}</span><span class="cat-chev">&#9660;</span></div>
+      </div>
+      <div class="cat-rows">${rows}</div>
+    </div>`;
+  }).join('');
+}
+function togWeapon(cat, idx) {
+  state.weapons[cat][idx].collected = !state.weapons[cat][idx].collected;
+  saveState(); renderWeapons(document.querySelector('#tab-weapons .search-bar')?.value||''); renderDash();
+}
+
+/* ── SPELLS ── */
+function renderSpells(filter) {
+  const q = (filter||'').toLowerCase();
+  const el = document.getElementById('spells-body');
+  const groups = [
+    {title:'SORCERIES', key:'sorceries'},
+    {title:'INCANTATIONS', key:'incantations'}
+  ];
+  el.innerHTML = groups.map(({title, key}) => {
+    const items = state[key];
+    const f = q ? items.filter(s => s.name.toLowerCase().includes(q)) : items;
+    if (!f.length) return '';
+    const got = f.filter(x=>x.collected).length;
+    const rows = f.map(item => {
+      const ri = items.indexOf(item);
+      return `<div class="item-row ${item.collected?'got':''}" onclick="togSpell('${key}',${ri})">
+        <div class="ick ${item.collected?'on':''}">${item.collected?'&#10003;':''}</div>
+        <div class="i-name">${item.name}${dlcBadge(item.name)}</div>
+        <div class="i-loc">${item.location||''}</div>
+      </div>`;
+    }).join('');
+    return `<div class="item-section">
+      <div class="cat-hdr" onclick="togCat(this.parentElement)">
+        <span class="cat-title">${title}</span>
+        <div class="cat-right"><span class="cat-cnt">${got}/${f.length}</span><span class="cat-chev">&#9660;</span></div>
+      </div>
+      <div class="cat-rows">${rows}</div>
+    </div>`;
+  }).join('');
+}
+function togSpell(key, idx) {
+  state[key][idx].collected = !state[key][idx].collected;
+  saveState(); renderSpells(document.querySelector('#tab-spells .search-bar')?.value||''); renderDash();
+}
+
+/* ── SPIRITS ── */
+function renderSpirits(filter) {
+  const q = (filter||'').toLowerCase();
+  const items = q ? state.spirit_ashes.filter(s => s.name.toLowerCase().includes(q)) : state.spirit_ashes;
+  const got = items.filter(x=>x.collected).length;
+  const rows = items.map(item => {
+    const ri = state.spirit_ashes.indexOf(item);
+    return `<div class="item-row ${item.collected?'got':''}" onclick="togSpirit(${ri})">
+      <div class="ick ${item.collected?'on':''}">${item.collected?'&#10003;':''}</div>
+      <div class="i-name">${item.name}${dlcBadge(item.name)}</div>
+      <div class="i-loc">${item.location||''}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('spirits-body').innerHTML = `
+    <div class="item-section">
+      <div class="cat-hdr" onclick="togCat(this.parentElement)">
+        <span class="cat-title">SPIRIT ASHES</span>
+        <div class="cat-right"><span class="cat-cnt">${got}/${items.length}</span><span class="cat-chev">&#9660;</span></div>
+      </div>
+      <div class="cat-rows">${rows}</div>
+    </div>`;
+}
+function togSpirit(idx) {
+  state.spirit_ashes[idx].collected = !state.spirit_ashes[idx].collected;
+  saveState(); renderSpirits(); renderDash();
+}
+
+/* ── TALISMANS ── */
+function renderTalismans(filter) {
+  const q = (filter||'').toLowerCase();
+  const items = q ? state.talismans.filter(t => t.name.toLowerCase().includes(q) || t.effect.toLowerCase().includes(q)) : state.talismans;
+  const got = items.filter(x=>x.collected).length;
+  const rows = items.map(item => {
+    const ri = state.talismans.indexOf(item);
+    return `<div class="item-row ${item.collected?'got':''}" onclick="togTalisman(${ri})">
+      <div class="ick ${item.collected?'on':''}">${item.collected?'&#10003;':''}</div>
+      <div class="i-name">${item.name}${dlcBadge(item.name)}</div>
+      <div class="i-loc">${item.effect||''}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('talismans-body').innerHTML = `
+    <div class="item-section">
+      <div class="cat-hdr" onclick="togCat(this.parentElement)">
+        <span class="cat-title">TALISMANS</span>
+        <div class="cat-right"><span class="cat-cnt">${got}/${items.length}</span><span class="cat-chev">&#9660;</span></div>
+      </div>
+      <div class="cat-rows">${rows}</div>
+    </div>`;
+}
+function togTalisman(idx) {
+  state.talismans[idx].collected = !state.talismans[idx].collected;
+  saveState(); renderTalismans(); renderDash();
+}
+
+/* ── CSV ── */
+function exportCSV() {
+  let csv = 'Section,Region,Name,DLC,Status,Deaths\n';
+  for (const [r,bs] of Object.entries(state.bosses))
+    for (const b of bs)
+      csv += `Boss,"${r}","${clean(b.name).replace(/"/g,"'")}",No,${b.killed?'Felled':'Not Felled'},${b.attempts||0}\n`;
+  for (const [r,bs] of Object.entries(state.sote_bosses))
+    for (const b of bs)
+      csv += `Boss SotE,"${r}","${b.name.replace(/"/g,"'")}",Yes,${b.killed?'Felled':'Not Felled'},${b.attempts||0}\n`;
+  for (const [cat,ws] of Object.entries(state.weapons))
+    for (const w of ws)
+      csv += `Weapon,"${cat}","${w.name.replace(/"/g,"'")}",${isDLC(w.name)?'Yes':'No'},${w.collected?'Collected':'Not Collected'},\n`;
+  for (const s of [...state.sorceries,...state.incantations])
+    csv += `Spell,,"${s.name.replace(/"/g,"'")}",${isDLC(s.name)?'Yes':'No'},${s.collected?'Collected':'Not Collected'},\n`;
+  for (const s of state.spirit_ashes)
+    csv += `Spirit Ash,,"${s.name.replace(/"/g,"'")}",${isDLC(s.name)?'Yes':'No'},${s.collected?'Collected':'Not Collected'},\n`;
+  for (const t of state.talismans)
+    csv += `Talisman,,"${t.name.replace(/"/g,"'")}",${isDLC(t.name)?'Yes':'No'},${t.collected?'Collected':'Not Collected'},\n`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = `er_${currentChar.replace(/\W/g,'_')}_${currentJourney.replace('+','p')}.csv`;
+  a.click();
+}
+
+/* ── RENDER ALL ── */
+function renderAll() {
+  renderDash();
+  renderBosses(document.getElementById('boss-search')?.value||'');
+  renderSote();
+  renderWeapons();
+  renderSpells();
+  renderSpirits();
+  renderTalismans();
+}
+
+/* ── INIT ── */
+loadMeta();
+state = loadState() || freshState();
+buildSelectors();
+
+const savedTheme = localStorage.getItem('er_theme') || 'stars';
+if (savedTheme !== 'stars') {
+  document.body.className = savedTheme === 'elden' ? 't-elden' : 't-sote';
+  document.querySelectorAll('.t-btn').forEach(b => {
+    b.classList.toggle('on', b.dataset.t === savedTheme);
+  });
+}
+
+renderAll();
+</script>
+</body>
+</html>
