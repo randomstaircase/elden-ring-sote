@@ -136,11 +136,11 @@ body{
 
 /* ── SUB NAV TABS ── */
 #subnav{
-  position:sticky;top:52px;z-index:100;
+  position:fixed;top:52px;left:0;right:0;z-index:100;
   background:var(--bg0);border-bottom:1px solid var(--border);
   display:flex;gap:0;overflow-x:auto;overflow-y:hidden;
-  margin:0 -18px;padding:0 18px;
   scrollbar-width:none;
+  padding:0 18px;
 }
 #subnav::-webkit-scrollbar{display:none;}
 .t-elden #subnav{background:var(--bg0);}
@@ -389,7 +389,7 @@ body{
   .icon-btn{padding:4px 7px;font-size:7.5px;}
   .csv-btn{padding:4px 8px;font-size:7.5px;}
   #shell{padding-left:12px;padding-right:12px;}
-  #subnav{margin:0 -12px;padding:0 12px;}
+  #subnav{padding:0 12px;}
   .snav{padding:9px 10px;font-size:8.5px;letter-spacing:.08em;}
 }
 @media(max-width:600px){
@@ -402,7 +402,7 @@ body{
   .icon-btn{padding:3px 5px;font-size:7px;}
   .csv-btn{padding:3px 6px;font-size:7px;}
   #shell{padding-left:8px;padding-right:8px;}
-  #subnav{margin:0 -8px;padding:0 8px;}
+  #subnav{padding:0 8px;}
   .snav{padding:8px 7px;font-size:8px;letter-spacing:.05em;}
 }
 @media(max-width:480px){
@@ -418,7 +418,7 @@ body{
   .icon-btn{padding:3px 5px;font-size:7px;}
   #shell{padding-left:10px;padding-right:10px;}
   #subnav{
-    margin:0 -10px;padding:7px 10px;
+    padding:7px 10px;
     flex-wrap:wrap;overflow-x:visible;overflow-y:visible;
     height:auto;gap:5px;
   }
@@ -1133,11 +1133,13 @@ if (savedTheme !== 'stars') {
 }
 
 function adjustLayout() {
-  const h = document.getElementById('topbar').getBoundingClientRect().height;
-  const shell = document.getElementById('shell');
+  const topbar = document.getElementById('topbar');
   const subnav = document.getElementById('subnav');
-  shell.style.paddingTop = h + 'px';
-  subnav.style.top = h + 'px';
+  const shell = document.getElementById('shell');
+  const topH = topbar.getBoundingClientRect().height;
+  const navH = subnav.getBoundingClientRect().height;
+  subnav.style.top = topH + 'px';
+  shell.style.paddingTop = (topH + navH) + 'px';
 }
 
 window.addEventListener('resize', adjustLayout);
