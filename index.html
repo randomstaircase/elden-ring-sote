@@ -70,6 +70,7 @@ body{
   background:rgba(6,9,14,.96);
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:10px;padding:0 18px;
+  flex-wrap:nowrap;overflow:hidden;
   backdrop-filter:blur(10px);
 }
 .t-elden #topbar{background:rgba(6,10,6,.97);}
@@ -84,6 +85,7 @@ body{
   color:var(--acc2);margin-left:5px;letter-spacing:.06em;opacity:.75;vertical-align:middle;
 }
 .tb-gap{flex:1;}
+.tb-gap-mobile{display:none;}
 
 /* Theme toggle */
 .theme-tog{
@@ -152,6 +154,7 @@ body{
 .snav:hover{color:var(--text);}
 .snav.on{color:var(--acc);border-bottom-color:var(--acc);}
 .snav.sote-tab.on{color:var(--sote-acc);border-bottom-color:var(--sote-acc);}
+.snav-pill{display:none;}
 .tab-pane{display:none;padding-top:18px;padding-bottom:60px;}
 .tab-pane.on{display:block;}
 
@@ -375,29 +378,71 @@ body{
 .search-bar:focus{border-color:var(--acc);}
 .search-bar::placeholder{color:var(--text3);}
 
-@media(max-width:680px){
-  #topbar{
-    height:auto;min-height:var(--top-h);
-    flex-wrap:wrap;padding:6px 10px;gap:5px;
-  }
-  .logo{order:1;font-size:11px;}
-  .logo em{font-size:7px;}
-  .tb-gap{display:none;}
-  .theme-tog{order:2;}
-  .t-btn{padding:2px 8px;font-size:10px;}
-  .pt-wrap{order:3;gap:4px;}
-  .sel{font-size:11px;padding:3px 6px;max-width:105px;}
-  .icon-btn{padding:4px 7px;font-size:7px;}
-  .csv-btn{order:4;padding:4px 8px;font-size:7px;}
-  #shell{padding-left:10px;padding-right:10px;padding-top:96px;}
-  #subnav{margin:0 -10px;padding:0 10px;scrollbar-width:none;top:96px;}
-  #subnav::-webkit-scrollbar{display:none;}
+/* ── COMPRESS: 600–900px — stay single line, shrink elements ── */
+@media(max-width:900px){
+  #topbar{padding:0 12px;gap:7px;}
+  .logo{font-size:11px;letter-spacing:.1em;}
+  .logo em{display:none;}
+  .t-btn{padding:3px 7px;font-size:10px;}
+  .sel{font-size:11px;padding:3px 6px;max-width:108px;}
+  .icon-btn{padding:4px 7px;font-size:7.5px;letter-spacing:.08em;}
+  .csv-btn{padding:4px 8px;font-size:7.5px;letter-spacing:.08em;}
+  #shell{padding-left:12px;padding-right:12px;}
+  #subnav{margin:0 -12px;padding:0 12px;}
+  .snav{padding:9px 10px;font-size:8.5px;letter-spacing:.08em;}
 }
-@media(max-width:420px){
-  .theme-tog{width:100%;order:3;justify-content:center;}
-  .pt-wrap{order:2;}
-  #shell{padding-top:112px;}
-  #subnav{top:112px;}
+
+/* ── COMPRESS MORE: 480–600px — tighter still, single line ── */
+@media(max-width:600px){
+  #topbar{padding:0 8px;gap:5px;}
+  .logo{font-size:10px;letter-spacing:.08em;}
+  .theme-tog{padding:2px;gap:1px;}
+  .t-btn{padding:2px 5px;font-size:9px;letter-spacing:.02em;}
+  .pt-wrap{gap:4px;}
+  .sel{font-size:10px;padding:2px 5px;max-width:88px;}
+  .icon-btn{padding:3px 6px;font-size:7px;}
+  .csv-btn{padding:3px 6px;font-size:7px;}
+  #shell{padding-left:8px;padding-right:8px;}
+  #subnav{margin:0 -8px;padding:0 8px;}
+  .snav{padding:8px 8px;font-size:8px;letter-spacing:.06em;}
+}
+
+/* ── WRAP: under 480px — topbar wraps to two rows, subnav pills ── */
+@media(max-width:480px){
+  #topbar{
+    height:auto;flex-wrap:wrap;
+    padding:6px 10px;gap:5px;align-items:center;
+  }
+  .logo{order:1;font-size:11px;letter-spacing:.1em;flex-shrink:0;}
+  .logo em{display:none;}
+  .tb-gap{order:2;flex:1;}
+  .csv-btn{order:3;flex-shrink:0;padding:4px 8px;font-size:7.5px;}
+  /* row 2: theme + selectors fill full width */
+  .theme-tog{order:4;flex:1;justify-content:flex-start;border-radius:14px;}
+  .t-btn{padding:3px 7px;font-size:9.5px;}
+  .pt-wrap{order:5;flex-shrink:0;gap:4px;}
+  .sel{font-size:11px;padding:3px 6px;max-width:96px;}
+  .icon-btn{padding:3px 6px;font-size:7px;}
+  #shell{padding-top:84px;padding-left:10px;padding-right:10px;}
+  #subnav{
+    top:84px;
+    margin:0 -10px;padding:7px 10px;
+    flex-wrap:wrap;overflow-x:visible;overflow-y:visible;
+    height:auto;gap:5px;
+  }
+  .snav{display:none;}
+  .snav-pill{
+    display:inline-flex;align-items:center;
+    font-family:'Cinzel',serif;font-size:9px;letter-spacing:.06em;
+    padding:5px 10px;
+    border:0.5px solid var(--border);border-radius:14px;
+    background:transparent;color:var(--text2);
+    cursor:pointer;transition:all .15s;white-space:nowrap;
+  }
+  .snav-pill:hover{color:var(--text);border-color:var(--acc);}
+  .snav-pill.on{background:var(--acc);color:var(--bg0);border-color:var(--acc);}
+  .snav-pill.sote-pill{color:var(--sote-text2);border-color:var(--sote-border);}
+  .snav-pill.sote-pill.on{background:var(--sote-acc);color:#fff0ee;border-color:var(--sote-acc);}
 }
 </style>
 </head>
@@ -420,6 +465,7 @@ body{
 <div id="topbar">
   <div class="logo">ELDEN RING<em>TRACKER</em></div>
   <div class="tb-gap"></div>
+  <div class="tb-gap-mobile"></div>
 
   <!-- Theme -->
   <div class="theme-tog">
@@ -441,13 +487,22 @@ body{
 
 <div id="shell">
   <div id="subnav">
-    <button class="snav on" onclick="showTab('dashboard',this)">Dashboard</button>
-    <button class="snav" onclick="showTab('bosses',this)">Bosses</button>
+    <!-- Desktop/tablet: underline tabs -->
+    <button class="snav on"       onclick="showTab('dashboard',this)">Dashboard</button>
+    <button class="snav"          onclick="showTab('bosses',this)">Bosses</button>
     <button class="snav sote-tab" onclick="showTab('sote',this)">Shadow of the Erdtree</button>
-    <button class="snav" onclick="showTab('weapons',this)">Weapons</button>
-    <button class="snav" onclick="showTab('spells',this)">Sorceries &amp; Incantations</button>
-    <button class="snav" onclick="showTab('spirits',this)">Spirit Ashes</button>
-    <button class="snav" onclick="showTab('talismans',this)">Talismans</button>
+    <button class="snav"          onclick="showTab('weapons',this)">Weapons</button>
+    <button class="snav"          onclick="showTab('spells',this)">Sorceries &amp; Incantations</button>
+    <button class="snav"          onclick="showTab('spirits',this)">Spirit Ashes</button>
+    <button class="snav"          onclick="showTab('talismans',this)">Talismans</button>
+    <!-- Mobile: pill buttons with short labels -->
+    <button class="snav-pill on"       onclick="showTab('dashboard',this)">Dashboard</button>
+    <button class="snav-pill"          onclick="showTab('bosses',this)">Bosses</button>
+    <button class="snav-pill sote-pill" onclick="showTab('sote',this)">Shadow</button>
+    <button class="snav-pill"          onclick="showTab('weapons',this)">Weapons</button>
+    <button class="snav-pill"          onclick="showTab('spells',this)">Spells</button>
+    <button class="snav-pill"          onclick="showTab('spirits',this)">Spirit Ashes</button>
+    <button class="snav-pill"          onclick="showTab('talismans',this)">Talismans</button>
   </div>
 
   <div id="tab-dashboard" class="tab-pane on"><div id="dash-body"></div></div>
@@ -666,9 +721,13 @@ function setTheme(t, btn) {
 /* ── TABS ── */
 function showTab(id, btn) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.snav').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.snav, .snav-pill').forEach(b => b.classList.remove('on'));
   document.getElementById('tab-' + id).classList.add('on');
   btn.classList.add('on');
+  // sync the paired button (snav ↔ snav-pill) by matching onclick tab id
+  const paired = Array.from(document.querySelectorAll('.snav, .snav-pill'))
+    .filter(b => b !== btn && b.getAttribute('onclick') === btn.getAttribute('onclick'));
+  paired.forEach(b => b.classList.add('on'));
 }
 
 /* ── HELPERS ── */
