@@ -1914,7 +1914,7 @@ const TE_SET = new Set([
 ]);
 
 const isTE    = n => TE_SET.has(n) || (typeof n === 'string' && n.endsWith(' [Tarnished Ed]'));
-const teBadge = n => isTE(n) ? '<span class="te">Tarnished Ed</span>' : '';;;;;;;;;;;;;
+const teBadge = n => isTE(n) ? '<span class="te">Tarnished</span>' : '';;;;;;;;;;;;;
 const isDLC = n => SOTE_SET.has(n) || (typeof n === 'string' && n.endsWith(' [SOTE]'));
 const dlcBadge = n => isDLC(n) ? '<span class="dlc">SotE</span>' : '';
 const stripSote = n => n ? n.replace(/ \[SOTE\]$/, '').replace(/ \[Tarnished Ed\]$/, '') : n;
@@ -3064,7 +3064,7 @@ function renderAoW(filter) {
       row.className = 'item-row' + (item.collected ? ' got' : '');
       const displayName = stripSote(item.name);
       row.innerHTML = '<div class="ick ' + (item.collected?'on':'') + '">' + (item.collected?'&#10003;':'') + '</div>'
-        + '<div class="i-name">' + displayName + (isDLC(item.name) ? '<span class="dlc">SotE</span>' : '') + (isTE(item.name) ? '<span class="te">Tarnished Ed</span>' : '') + '</div>';
+        + '<div class="i-name">' + displayName + (isDLC(item.name) ? '<span class="dlc">SotE</span>' : '') + (isTE(item.name) ? '<span class="te">Tarnished</span>' : '') + '</div>';
       row.querySelector('.ick') ? null : null; row.onclick = (function(r,a,i){ return function(){ togAoW(a,i,r.querySelector('.ick')); }; })(row, affinity, ri);
       rows.appendChild(row);
     }
@@ -3129,7 +3129,7 @@ function renderArmor(filter) {
     row.className = 'item-row' + (item.collected ? ' got' : '');
     const displayName = stripSote(item.name);
     row.innerHTML = '<div class="ick ' + (item.collected?'on':'') + '">' + (item.collected?'&#10003;':'') + '</div>'
-      + '<div class="i-name">' + displayName + (isDLC(item.name) ? '<span class="dlc">SotE</span>' : '') + (isTE(item.name) ? '<span class="te">Tarnished Ed</span>' : '') + '</div>';
+      + '<div class="i-name">' + displayName + (isDLC(item.name) ? '<span class="dlc">SotE</span>' : '') + (isTE(item.name) ? '<span class="te">Tarnished</span>' : '') + '</div>';
     row.onclick = (function(r,slot,i){ return function(){ togArmor(slot,i,r.querySelector('.ick')); }; })(row, _currentArmorSlot, ri);
     rows.appendChild(row);
   }
@@ -3197,7 +3197,7 @@ function renderSpellsTyped(filter) {
       row.className = 'item-row' + (item.collected ? ' got' : '');
       const displayName = stripSote(item.name);
       row.innerHTML = '<div class="ick ' + (item.collected?'on':'') + '">' + (item.collected?'&#10003;':'') + '</div>'
-        + '<div class="i-name">' + displayName + (isDLC(item.name) ? '<span class="dlc">SotE</span>' : '') + (isTE(item.name) ? '<span class="te">Tarnished Ed</span>' : '') + '</div>';
+        + '<div class="i-name">' + displayName + (isDLC(item.name) ? '<span class="dlc">SotE</span>' : '') + (isTE(item.name) ? '<span class="te">Tarnished</span>' : '') + '</div>';
       row.onclick = (function(r,k,i){ return function(){ togSpellTyped(k,i,r.querySelector('.ick')); }; })(row, typ, ri);
       rows.appendChild(row);
     }
@@ -3293,7 +3293,7 @@ function renderSpirits(filter) {
       row.className = 'item-row' + (item.collected ? ' got' : '');
       const displayName = stripSote(item.name);
       row.innerHTML = '<div class="ick ' + (item.collected?'on':'') + '">' + (item.collected?'&#10003;':'') + '</div>'
-        + '<div class="i-name">' + displayName + (isDLC(item.name) ? '<span class="dlc">SotE</span>' : '') + (isTE(item.name) ? '<span class="te">Tarnished Ed</span>' : '') + '</div>';
+        + '<div class="i-name">' + displayName + (isDLC(item.name) ? '<span class="dlc">SotE</span>' : '') + (isTE(item.name) ? '<span class="te">Tarnished</span>' : '') + '</div>';
       row.onclick = (function(r,i){ return function(){ togSpirit(i,r.querySelector('.ick')); }; })(row, ri);
       rows.appendChild(row);
     }
